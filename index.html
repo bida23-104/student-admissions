@@ -3,159 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DTT&amp;TE Admissions Portal</title>
+    <title>DTT&amp;TE Admissions Portal • 2026/2027</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Swiper.js for Image Sliders -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Poppins:wght@500;600&amp;display=swap');
         
-        :root {
-            --primary: #1e40af;
-        }
-        
         body {
-            font-family: 'Inter', system_ui, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
         }
         
         .header-font {
-            font-family: 'Poppins', system_ui, sans-serif;
+            font-family: 'Poppins', system-ui, sans-serif;
             font-weight: 600;
-        }
-
-        .nav-active {
-            background-color: #1e40af;
-            color: white;
-            border-radius: 0.5rem;
-        }
-
-        .section-header {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1e40af;
-            border-bottom: 2px solid #dbeafe;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .form-input {
-            transition: all 0.2s ease;
-        }
-        
-        .form-input:focus {
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
-            border-color: #1e40af;
-        }
-
-        .grade-input {
-            width: 60px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .status-qualified {
-            background-color: #dcfce7;
-            color: #166534;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-        
-        .status-not-qualified {
-            background-color: #fee2e2;
-            color: #991b1b;
-            padding: 4px 12px;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .app-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .app-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        .modal {
-            animation: fadeInScale 0.2s ease forwards;
-        }
-
-        @keyframes fadeInScale {
-            from {
-                opacity: 0;
-                transform: scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .subject-row {
-            transition: background-color 0.2s ease;
-        }
-        
-        .subject-row:hover {
-            background-color: #f8fafc;
-        }
-
-        .nav-tab {
-            transition: all 0.2s ease;
-        }
-        
-        .nav-tab.active {
-            background-color: #1e40af;
-            color: white;
-            box-shadow: 0 4px 6px -1px rgb(30 64 175 / 0.2);
-        }
-
-        .data-table {
-            border-collapse: separate;
-            border-spacing: 0;
-        }
-        
-        .data-table th {
-            background-color: #f1f5f9;
-            font-weight: 600;
-            color: #334155;
-        }
-        
-        .botswana-blue {
-            color: #1e40af;
         }
     </style>
 </head>
 <body class="bg-slate-50">
-    <!-- Header -->
-    <div class="bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-6 py-5">
-            <div class="flex items-center justify-between">
+    <!-- Top Navigation Bar -->
+    <div class="bg-white border-b border-slate-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
                 <div class="flex items-center gap-x-4">
-                    <div class="w-12 h-12 bg-blue-800 rounded-2xl flex items-center justify-center shadow-inner">
+                    <div class="w-11 h-11 bg-blue-800 rounded-2xl flex items-center justify-center shadow-inner">
                         <i class="fa-solid fa-graduation-cap text-white text-3xl"></i>
                     </div>
                     <div>
-                        <h1 class="text-3xl font-bold text-slate-900 header-font tracking-tight">DTT&amp;TE</h1>
-                        <p class="text-sm text-slate-500 -mt-1">Department of Technical &amp; Vocational Education</p>
+                        <h1 class="text-3xl font-bold text-slate-900 header-font tracking-tighter">DTT&amp;TE</h1>
+                        <p class="text-[10px] text-slate-500 -mt-1 font-medium">Department of Technical &amp; Vocational Education</p>
                     </div>
                 </div>
-                
-                <div class="flex items-center gap-x-3">
-                    <div class="px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-3xl text-sm font-semibold flex items-center gap-x-2">
-                        <i class="fa-solid fa-check-circle"></i>
+
+                <div class="flex items-center gap-x-4">
+                    <!-- Academic Year Badge -->
+                    <div class="hidden md:flex items-center px-4 h-9 bg-emerald-100 text-emerald-700 rounded-3xl text-sm font-semibold">
+                        <i class="fa-solid fa-calendar-check mr-2"></i>
                         <span>Academic Year 2026/2027</span>
                     </div>
-                    <div class="flex items-center gap-x-2 text-sm">
-                        <div class="w-8 h-8 bg-slate-200 rounded-full overflow-hidden ring-2 ring-white">
-                            <img src="https://i.pravatar.cc/32?img=28" alt="Admin">
+                    
+                    <!-- User Profile -->
+                    <div class="flex items-center gap-x-3">
+                        <div class="text-right hidden md:block">
+                            <div class="font-semibold text-slate-800 text-sm">Mpaphi Mahlathini</div>
+                            <div class="text-[10px] text-slate-500 -mt-0.5">Admissions Officer • Palapye</div>
                         </div>
-                        <div>
-                            <div class="font-semibold text-slate-700">Mpaphi Mahlathini</div>
-                            <div class="text-[10px] text-slate-500 -mt-0.5">Admissions Officer</div>
+                        <div class="w-9 h-9 rounded-2xl overflow-hidden ring-2 ring-white shadow">
+                            <img src="https://i.pravatar.cc/36?img=28" alt="Profile" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>
@@ -163,39 +68,58 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 pt-8 pb-12">
+    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
         
+        <!-- Page Header -->
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Student Admissions Portal</h2>
+                <p class="text-slate-600 mt-1 text-lg">Manage applications for technical and vocational programmes</p>
+            </div>
+            
+            <div class="hidden md:block">
+                <div class="flex items-center gap-x-2 text-sm">
+                    <div class="px-3 py-1 bg-white rounded-2xl border text-slate-600 flex items-center gap-x-2">
+                        <i class="fa-solid fa-globe text-emerald-500"></i>
+                        <span class="font-medium">Online Applications Open</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Navigation Tabs -->
         <div class="flex items-center gap-x-2 mb-8 bg-white p-1.5 rounded-3xl shadow-sm border border-slate-100 w-fit">
             <button onclick="showTab('new-application')" id="tab-new-application"
-                    class="nav-tab active px-8 py-3 text-sm font-semibold flex items-center gap-x-2 rounded-3xl">
-                <i class="fa-solid fa-plus"></i>
+                    class="nav-tab active px-7 py-3 text-sm font-semibold flex items-center gap-x-2 rounded-3xl bg-blue-800 text-white">
+                <i class="fa-solid fa-plus mr-1"></i>
                 <span>New Application</span>
             </button>
+            
+            <button onclick="showTab('programmes')" id="tab-programmes"
+                    class="nav-tab px-7 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
+                <i class="fa-solid fa-images mr-1"></i>
+                <span>Available Programmes</span>
+            </button>
+            
             <button onclick="showTab('all-applications')" id="tab-all-applications"
-                    class="nav-tab px-8 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
-                <i class="fa-solid fa-list"></i>
+                    class="nav-tab px-7 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
+                <i class="fa-solid fa-list mr-1"></i>
                 <span>All Applications</span>
                 <span id="app-count" 
-                      class="ml-1.5 px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 rounded-2xl">0</span>
+                      class="ml-1 px-2.5 py-px text-xs font-bold bg-slate-100 text-slate-600 rounded-2xl">0</span>
             </button>
         </div>
 
-        <!-- NEW APPLICATION TAB -->
+        <!-- ==================== NEW APPLICATION TAB ==================== -->
         <div id="new-application" class="tab-content">
-            <div class="max-w-5xl mx-auto">
-                <div class="mb-6">
-                    <h2 class="text-3xl font-bold text-slate-900">New Student Application</h2>
-                    <p class="text-slate-600 mt-1">Fill in the form below. All calculations are done automatically.</p>
-                </div>
-
+            <div class="max-w-5xl">
                 <form id="admission-form" onsubmit="submitApplication(event)" class="space-y-8">
                     
                     <!-- Programme Selection -->
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header flex items-center gap-x-3">
-                            <i class="fa-solid fa-graduation-cap text-xl"></i>
-                            <span>Programme Applied For</span>
+                        <div class="section-header">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Programme Selection</span>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -218,15 +142,15 @@
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Application Reference</label>
                                 <input type="text" id="receipt-number" value="REC-2026-" readonly
-                                       class="form-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-mono">
+                                       class="form-input w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-mono tracking-widest">
                             </div>
                         </div>
                     </div>
 
                     <!-- Personal Details -->
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header flex items-center gap-x-3">
-                            <i class="fa-solid fa-user text-xl"></i>
+                        <div class="section-header">
+                            <i class="fa-solid fa-user"></i>
                             <span>Personal Details</span>
                         </div>
                         
@@ -263,110 +187,102 @@
                                 <label class="block text-sm font-semibold text-slate-700 mb-1.5">Identity Number (9 digits)</label>
                                 <input type="text" id="identity-number" maxlength="9" required 
                                        oninput="validateIdentityNumber()" placeholder="e.g. 123456789"
-                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm font-mono tracking-widest">
-                                <p id="id-error" class="text-red-500 text-xs mt-1 hidden"></p>
+                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm font-mono tracking-[3px]">
+                                <p id="id-error" class="text-red-500 text-xs mt-1 hidden font-medium"></p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Education & Results -->
+                    <!-- Education Results -->
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
                         <div class="section-header flex items-center justify-between">
                             <div class="flex items-center gap-x-3">
-                                <i class="fa-solid fa-book text-xl"></i>
+                                <i class="fa-solid fa-book"></i>
                                 <span>BGCSE / Equivalent Results</span>
                             </div>
                             <div class="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-2xl font-semibold flex items-center gap-x-1.5">
                                 <i class="fa-solid fa-info-circle"></i>
-                                <span>Enter grades (A–G)</span>
+                                <span>Enter grades A–G</span>
                             </div>
                         </div>
                         
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm">
+                        <div class="overflow-x-auto pb-2">
+                            <table class="w-full text-sm min-w-[700px]">
                                 <thead>
                                     <tr class="border-b border-slate-200">
-                                        <th class="text-left py-3 px-4 font-semibold text-slate-600 w-1/4">Subject</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Grade</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Points</th>
                                         <th class="text-left py-3 px-4 font-semibold text-slate-600">Subject</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Grade</th>
+                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-20">Grade</th>
+                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Points</th>
+                                        <th class="text-left py-3 px-4 font-semibold text-slate-600 border-l">Subject</th>
+                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-20">Grade</th>
                                         <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Points</th>
                                     </tr>
                                 </thead>
-                                <tbody id="subjects-table" class="divide-y divide-slate-100 text-sm">
+                                <tbody id="subjects-table" class="divide-y divide-slate-100">
                                     <!-- Populated by JavaScript -->
                                 </tbody>
                             </table>
                         </div>
                         
-                        <div class="mt-5 pt-5 border-t flex items-center justify-between bg-slate-50 -mx-2 -mb-2 px-6 py-4 rounded-b-3xl">
-                            <div>
-                                <span class="text-sm font-semibold text-slate-600">Best 6 Points:</span>
-                                <span id="best-six-points" 
-                                      class="ml-3 text-3xl font-extrabold text-blue-800 tabular-nums">0</span>
+                        <div class="mt-6 pt-5 border-t flex items-center justify-between bg-slate-50 -mx-2 -mb-2 px-7 py-4 rounded-b-3xl">
+                            <div class="flex items-baseline gap-x-3">
+                                <span class="text-sm font-semibold text-slate-600">Best 6 Points</span>
+                                <span id="best-six-points" class="text-4xl font-extrabold text-blue-800 tabular-nums">0</span>
                             </div>
                             <div class="text-right">
                                 <div class="text-xs text-slate-500">Total Points (Top 6)</div>
-                                <div id="total-points" class="text-2xl font-bold text-slate-700 tabular-nums">0</div>
+                                <div id="total-points" class="text-3xl font-extrabold text-slate-700 tabular-nums">0</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Prerequisite Check -->
+                    <!-- Prerequisites -->
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header flex items-center gap-x-3">
-                            <i class="fa-solid fa-check-double text-xl"></i>
+                        <div class="section-header">
+                            <i class="fa-solid fa-check-double"></i>
                             <span>Prerequisite Check</span>
                         </div>
-                        
-                        <div id="prerequisite-section" class="text-sm">
-                            <div class="text-slate-500 italic">Select a programme above to see prerequisite requirements.</div>
+                        <div id="prerequisite-section">
+                            <div class="text-slate-500 italic">Select a programme above to view requirements.</div>
                         </div>
                     </div>
 
-                    <!-- Other Information -->
+                    <!-- Other Info -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- SEN/OVC -->
                         <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                            <div class="section-header flex items-center gap-x-3">
-                                <i class="fa-solid fa-users text-xl"></i>
+                            <div class="section-header">
+                                <i class="fa-solid fa-users"></i>
                                 <span>Special Category</span>
                             </div>
-                            
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">SEN / OVC / RAD Status</label>
-                                    <select id="sen-ovc" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                        <option value="No">No</option>
-                                        <option value="SEN">Special Educational Needs (SEN)</option>
-                                        <option value="OVC">Orphaned &amp; Vulnerable Child (OVC)</option>
-                                        <option value="RAD">Refugee / Asylum Seeker</option>
-                                    </select>
-                                </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">SEN / OVC / RAD Status</label>
+                                <select id="sen-ovc" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
+                                    <option value="No">No</option>
+                                    <option value="SEN">Special Educational Needs (SEN)</option>
+                                    <option value="OVC">Orphaned &amp; Vulnerable Child (OVC)</option>
+                                    <option value="RAD">Refugee / Asylum Seeker</option>
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- Work Experience -->
                         <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                            <div class="section-header flex items-center gap-x-3">
-                                <i class="fa-solid fa-briefcase text-xl"></i>
+                            <div class="section-header">
+                                <i class="fa-solid fa-briefcase"></i>
                                 <span>Work Experience</span>
                             </div>
-                            
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Months of Relevant Experience</label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Months of Relevant Experience</label>
                                 <input type="number" id="work-experience" value="0" min="0"
                                        class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                <p class="text-xs text-slate-500 mt-1.5">Leave as 0 if none.</p>
+                                <p class="text-xs text-slate-500 mt-1.5">Enter 0 if no relevant experience.</p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Submit Button -->
+                    <!-- Submit -->
                     <div class="flex justify-end pt-4">
                         <button type="submit"
-                                class="px-10 py-4 bg-blue-800 hover:bg-blue-900 transition-colors text-white font-bold rounded-3xl flex items-center gap-x-3 shadow-lg shadow-blue-800/30 text-sm tracking-wider">
+                                class="px-10 py-4 bg-blue-800 hover:bg-blue-900 transition-all text-white font-bold rounded-3xl flex items-center gap-x-3 shadow-lg shadow-blue-800/30 text-sm tracking-wider active:scale-[0.985]">
                             <i class="fa-solid fa-paper-plane"></i>
                             <span>SUBMIT APPLICATION</span>
                         </button>
@@ -375,18 +291,39 @@
             </div>
         </div>
 
-        <!-- ALL APPLICATIONS TAB -->
+        <!-- ==================== AVAILABLE PROGRAMMES TAB ==================== -->
+        <div id="programmes" class="tab-content hidden">
+            <div class="mb-8">
+                <h3 class="text-3xl font-extrabold text-slate-900">Available Programmes</h3>
+                <p class="text-slate-600 mt-1">Explore our technical and vocational programmes for the 2026/2027 academic year.</p>
+            </div>
+
+            <!-- Swiper Slider -->
+            <div class="swiper mySwiper mb-10">
+                <div class="swiper-wrapper">
+                    <!-- Programme Slides will be injected by JavaScript -->
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+
+            <!-- Programme Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="programme-cards">
+                <!-- Populated dynamically -->
+            </div>
+        </div>
+
+        <!-- ==================== ALL APPLICATIONS TAB ==================== -->
         <div id="all-applications" class="tab-content hidden">
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h2 class="text-3xl font-bold text-slate-900">All Applications</h2>
-                    <p class="text-slate-600">Review submitted applications and their qualification status.</p>
+                    <h3 class="text-3xl font-extrabold text-slate-900">All Applications</h3>
+                    <p class="text-slate-600">Review and manage submitted student applications.</p>
                 </div>
-                <div class="flex items-center gap-x-3">
+                <div class="flex gap-x-3">
                     <button onclick="exportToCSV()" 
                             class="px-5 py-2.5 text-sm font-semibold flex items-center gap-x-2 border border-slate-300 hover:bg-white transition-colors rounded-2xl bg-white">
                         <i class="fa-solid fa-download"></i>
-                        <span>Export to CSV</span>
+                        <span>Export CSV</span>
                     </button>
                     <button onclick="clearAllApplications()" 
                             class="px-5 py-2.5 text-sm font-semibold flex items-center gap-x-2 text-red-600 hover:bg-red-50 transition-colors rounded-2xl">
@@ -401,25 +338,25 @@
                     <table class="w-full data-table text-sm">
                         <thead>
                             <tr>
-                                <th class="px-6 py-4 text-left font-semibold">Ref</th>
-                                <th class="px-6 py-4 text-left font-semibold">Applicant</th>
-                                <th class="px-6 py-4 text-left font-semibold">Programme</th>
-                                <th class="px-6 py-4 text-center font-semibold">Points</th>
-                                <th class="px-6 py-4 text-center font-semibold">Status</th>
-                                <th class="px-6 py-4 text-center font-semibold">Date</th>
-                                <th class="px-6 py-4 text-center font-semibold w-20">Actions</th>
+                                <th class="px-6 py-4 text-left">Reference</th>
+                                <th class="px-6 py-4 text-left">Applicant</th>
+                                <th class="px-6 py-4 text-left">Programme</th>
+                                <th class="px-6 py-4 text-center">Points</th>
+                                <th class="px-6 py-4 text-center">Status</th>
+                                <th class="px-6 py-4 text-center">Date</th>
+                                <th class="px-6 py-4 text-center w-16">View</th>
                             </tr>
                         </thead>
-                        <tbody id="applications-table-body" class="divide-y divide-slate-100 text-sm">
-                            <!-- Populated dynamically by JavaScript -->
+                        <tbody id="applications-table-body" class="divide-y divide-slate-100">
+                            <!-- Populated by JS -->
                         </tbody>
                     </table>
                 </div>
             </div>
             
-            <div id="no-applications" class="hidden text-center py-16">
-                <i class="fa-solid fa-inbox text-5xl text-slate-300 mb-4"></i>
-                <p class="font-semibold text-slate-500">No applications submitted yet.</p>
+            <div id="no-applications" class="hidden text-center py-16 bg-white mt-4 rounded-3xl border">
+                <i class="fa-solid fa-inbox text-6xl text-slate-200 mb-4"></i>
+                <p class="font-semibold text-slate-500">No applications have been submitted yet.</p>
             </div>
         </div>
     </div>
@@ -428,20 +365,18 @@
     <div id="detail-modal" onclick="if (event.target.id === 'detail-modal') hideModal()" 
          class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-6">
         <div onclick="event.stopImmediatePropagation()" 
-             class="modal bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+             class="modal bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
             
             <div class="px-8 py-5 border-b flex items-center justify-between bg-slate-50">
                 <div>
-                    <div id="modal-ref" class="font-mono text-xs text-slate-500"></div>
-                    <div id="modal-name" class="text-2xl font-bold text-slate-900"></div>
+                    <div id="modal-ref" class="font-mono text-xs tracking-widest text-slate-500"></div>
+                    <div id="modal-name" class="text-2xl font-extrabold text-slate-900"></div>
                 </div>
-                <div>
-                    <span id="modal-status-badge"></span>
-                </div>
+                <div id="modal-status-badge"></div>
             </div>
             
-            <div class="p-8 overflow-auto flex-1 text-sm" id="modal-content">
-                <!-- Dynamic content injected here -->
+            <div class="p-8 overflow-auto flex-1" id="modal-content">
+                <!-- Dynamic content -->
             </div>
             
             <div class="px-8 py-5 border-t bg-slate-50 flex justify-end gap-x-3">
@@ -452,643 +387,16 @@
                 <button onclick="deleteCurrentApplication()" 
                         class="px-6 py-2.5 text-sm font-semibold rounded-2xl bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center gap-x-2">
                     <i class="fa-solid fa-trash"></i>
-                    <span>Delete Application</span>
+                    <span>Delete</span>
                 </button>
             </div>
         </div>
     </div>
 
-    <script>
-        // Tailwind Script
-        function initializeTailwind() {
-            document.documentElement.style.setProperty('--accent', '#1e40af');
-        }
-
-        // Grade to Points Mapping
-        const gradePoints = {
-            'A': 8, 'B': 7, 'C': 6, 'D': 5, 'E': 4, 'F': 3, 'G': 0,
-            'a': 8, 'b': 7, 'c': 6, 'd': 5, 'e': 4, 'f': 3, 'g': 0
-        };
-
-        // Programme Prerequisites
-        const programmeRequirements = {
-            "Fashion Design": {
-                subjects: ["English", "Fashion & Fabrics"],
-                minGrade: "E",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Beauty Therapy": {
-                subjects: ["English", "Biology"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Travel Management": {
-                subjects: ["English", "Mathematics"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Hospitality Management": {
-                subjects: ["English", "Food & Nutrition"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Culinary Arts": {
-                subjects: ["English", "Food & Nutrition"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Computer Networking": {
-                subjects: ["Mathematics", "English"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Systems Administration": {
-                subjects: ["Mathematics", "English"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            },
-            "Health and Wellness": {
-                subjects: ["English", "Physical Education"],
-                minGrade: "D",
-                minPoints: 28,
-                senMinPoints: 26
-            }
-        };
-
-        // Subject list for the form
-        const subjectsList = [
-            "English Language", "Setswana", "Mathematics", "Science Single Award", 
-            "Science Double Award", "Chemistry", "Physics", "Biology", 
-            "Human & Social Biology", "History", "Geography", "Social Studies",
-            "Development Studies", "Religious Education", "Literature in English",
-            "Commerce", "Accounting", "Business Studies", "Computer Studies",
-            "Design & Technology", "Music", "Physical Education", "Hospitality & Tourism",
-            "Food & Nutrition", "Fashion & Fabrics", "Home Management",
-            "Animal Production", "Field Crop Production", "Horticulture", "Agriculture"
-        ];
-
-        let currentModalRef = null;
-
-        // Initialize the subjects table
-        function initializeSubjectsTable() {
-            const tbody = document.getElementById('subjects-table');
-            tbody.innerHTML = '';
-            
-            // Create two columns of subjects
-            for (let i = 0; i < subjectsList.length; i += 2) {
-                const row = document.createElement('tr');
-                row.className = 'subject-row';
-                
-                let html = `<td class="px-4 py-3 text-slate-700 font-medium">${subjectsList[i]}</td>`;
-                html += `<td class="px-2 py-3"><input type="text" maxlength="1" class="grade-input border border-slate-300 rounded-xl px-2 py-1.5 text-center font-bold" data-subject="${subjectsList[i]}" oninput="calculatePoints()"></td>`;
-                html += `<td class="px-2 py-3 text-center"><span class="points-display font-bold text-blue-700" data-subject="${subjectsList[i]}">0</span></td>`;
-                
-                if (subjectsList[i + 1]) {
-                    html += `<td class="px-4 py-3 text-slate-700 font-medium border-l">${subjectsList[i + 1]}</td>`;
-                    html += `<td class="px-2 py-3"><input type="text" maxlength="1" class="grade-input border border-slate-300 rounded-xl px-2 py-1.5 text-center font-bold" data-subject="${subjectsList[i + 1]}" oninput="calculatePoints()"></td>`;
-                    html += `<td class="px-2 py-3 text-center"><span class="points-display font-bold text-blue-700" data-subject="${subjectsList[i + 1]}">0</span></td>`;
-                } else {
-                    html += `<td class="px-4 py-3 border-l"></td><td></td><td></td>`;
-                }
-                
-                row.innerHTML = html;
-                tbody.appendChild(row);
-            }
-        }
-
-        // Calculate points from grades
-        function calculatePoints() {
-            let totalPoints = 0;
-            const pointDisplays = document.querySelectorAll('.points-display');
-            const gradeInputs = document.querySelectorAll('.grade-input');
-            
-            pointDisplays.forEach(display => {
-                const subject = display.dataset.subject;
-                const input = document.querySelector(`.grade-input[data-subject="${subject}"]`);
-                const grade = input ? input.value.toUpperCase() : '';
-                const points = gradePoints[grade] || 0;
-                
-                display.textContent = points;
-                if (points > 0) {
-                    display.classList.add('text-emerald-600');
-                    display.classList.remove('text-blue-700');
-                } else {
-                    display.classList.remove('text-emerald-600');
-                    display.classList.add('text-blue-700');
-                }
-            });
-            
-            // Calculate Best 6
-            let allPoints = [];
-            gradeInputs.forEach(input => {
-                const grade = input.value.toUpperCase();
-                if (gradePoints[grade] !== undefined) {
-                    allPoints.push(gradePoints[grade]);
-                }
-            });
-            
-            // Sort descending and take top 6
-            allPoints.sort((a, b) => b - a);
-            const bestSix = allPoints.slice(0, 6);
-            const bestSixTotal = bestSix.reduce((sum, p) => sum + p, 0);
-            
-            document.getElementById('best-six-points').textContent = bestSixTotal;
-            document.getElementById('total-points').textContent = bestSixTotal;
-            
-            // Update prerequisite check if programme is selected
-            const programme = document.getElementById('programme').value;
-            if (programme) {
-                checkPrerequisites(programme);
-            }
-        }
-
-        // Update prerequisite section based on selected programme
-        function updatePrerequisiteFields() {
-            const programme = document.getElementById('programme').value;
-            const section = document.getElementById('prerequisite-section');
-            
-            if (!programme) {
-                section.innerHTML = `<div class="text-slate-500 italic">Select a programme above to see prerequisite requirements.</div>`;
-                return;
-            }
-            
-            const req = programmeRequirements[programme];
-            if (!req) {
-                section.innerHTML = `<div class="text-amber-600">No specific prerequisite data found for this programme.</div>`;
-                return;
-            }
-            
-            let html = `
-                <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-                    <div class="font-bold text-blue-800 mb-3 flex items-center gap-x-2">
-                        <i class="fa-solid fa-info-circle"></i>
-                        <span>${programme} Requirements</span>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 text-sm">
-                        <div>
-                            <span class="font-semibold text-slate-700">Minimum Points:</span><br>
-                            <span class="text-lg font-extrabold text-blue-900">${req.minPoints}</span> 
-                            <span class="text-xs text-slate-500">(SEN/OVC: ${req.senMinPoints})</span>
-                        </div>
-                        
-                        <div>
-                            <span class="font-semibold text-slate-700">Required Subjects (Min Grade ${req.minGrade}):</span><br>
-                            <span class="font-bold text-emerald-700">${req.subjects.join(' + ')}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            section.innerHTML = html;
-            
-            // Trigger prerequisite check
-            setTimeout(() => checkPrerequisites(programme), 300);
-        }
-
-        // Check if applicant meets prerequisites
-        function checkPrerequisites(programme) {
-            const req = programmeRequirements[programme];
-            if (!req) return;
-            
-            const bestSix = parseInt(document.getElementById('best-six-points').textContent) || 0;
-            const senStatus = document.getElementById('sen-ovc').value;
-            const isSEN = senStatus !== 'No';
-            
-            const minPoints = isSEN ? req.senMinPoints : req.minPoints;
-            const meetsPoints = bestSix >= minPoints;
-            
-            // Check specific subjects
-            let meetsSubjects = true;
-            let subjectStatus = [];
-            
-            req.subjects.forEach(subjectName => {
-                // Find matching input
-                const inputs = document.querySelectorAll('.grade-input');
-                let foundGrade = null;
-                
-                inputs.forEach(input => {
-                    const subj = input.dataset.subject.toLowerCase();
-                    if (subj.includes(subjectName.toLowerCase().split(' ')[0])) {
-                        foundGrade = input.value.toUpperCase();
-                    }
-                });
-                
-                const gradeValue = gradePoints[foundGrade] || 0;
-                const minGradeValue = gradePoints[req.minGrade] || 0;
-                const passed = gradeValue >= minGradeValue;
-                
-                subjectStatus.push({
-                    name: subjectName,
-                    grade: foundGrade || '—',
-                    passed: passed
-                });
-                
-                if (!passed) meetsSubjects = false;
-            });
-            
-            // Display result
-            const section = document.getElementById('prerequisite-section');
-            
-            let statusHTML = '';
-            if (meetsPoints && meetsSubjects) {
-                statusHTML = `
-                    <div class="flex items-center gap-x-3 bg-emerald-100 border border-emerald-200 text-emerald-800 px-5 py-4 rounded-2xl">
-                        <i class="fa-solid fa-check-circle text-2xl"></i>
-                        <div>
-                            <div class="font-extrabold">Prerequisites Met</div>
-                            <div class="text-xs">Applicant qualifies for this programme.</div>
-                        </div>
-                    </div>
-                `;
-            } else {
-                statusHTML = `
-                    <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-                        <div class="flex items-center gap-x-2 text-amber-700 font-bold mb-2">
-                            <i class="fa-solid fa-exclamation-triangle"></i>
-                            <span>Prerequisites Not Fully Met</span>
-                        </div>
-                        
-                        <div class="text-xs space-y-1 pl-1">
-                            ${!meetsPoints ? `<div>• Points: <span class="font-bold">${bestSix}</span> (need ≥ ${minPoints})</div>` : ''}
-                            ${subjectStatus.map(s => {
-                                return `<div>• ${s.name}: <span class="${s.passed ? 'text-emerald-600' : 'text-red-600 font-bold'}">${s.grade}</span> ${s.passed ? '✓' : '✗ (need ' + req.minGrade + ')'}</div>`;
-                            }).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            section.innerHTML = statusHTML;
-        }
-
-        // Validate Identity Number
-        function validateIdentityNumber() {
-            const idInput = document.getElementById('identity-number');
-            const genderSelect = document.getElementById('gender');
-            const errorEl = document.getElementById('id-error');
-            
-            const id = idInput.value.trim();
-            const gender = genderSelect.value;
-            
-            errorEl.classList.add('hidden');
-            idInput.classList.remove('border-red-400', 'border-emerald-400');
-            
-            if (!id) return true;
-            
-            // Must be exactly 9 digits
-            if (!/^\d{9}$/.test(id)) {
-                errorEl.textContent = 'ID must be exactly 9 digits.';
-                errorEl.classList.remove('hidden');
-                idInput.classList.add('border-red-400');
-                return false;
-            }
-            
-            // Check 5th digit based on gender
-            if (gender) {
-                const fifthDigit = id.charAt(4);
-                const expected = (gender === 'Male') ? '1' : '2';
-                
-                if (fifthDigit !== expected) {
-                    errorEl.textContent = `For ${gender}, 5th digit must be ${expected}.`;
-                    errorEl.classList.remove('hidden');
-                    idInput.classList.add('border-red-400');
-                    return false;
-                }
-            }
-            
-            idInput.classList.add('border-emerald-400');
-            return true;
-        }
-
-        // Submit Application
-        function submitApplication(e) {
-            e.preventDefault();
-            
-            // Validate ID
-            if (!validateIdentityNumber()) {
-                alert("Please fix the Identity Number errors before submitting.");
-                return;
-            }
-            
-            const programme = document.getElementById('programme').value;
-            if (!programme) {
-                alert("Please select a programme.");
-                return;
-            }
-            
-            // Collect data
-            const application = {
-                id: Date.now(),
-                ref: 'REC-' + Date.now().toString().slice(-6),
-                date: new Date().toISOString(),
-                programme: programme,
-                surname: document.getElementById('surname').value,
-                firstName: document.getElementById('first-name').value,
-                otherNames: document.getElementById('other-names').value || '',
-                dob: document.getElementById('dob').value,
-                gender: document.getElementById('gender').value,
-                identityNumber: document.getElementById('identity-number').value,
-                senOvc: document.getElementById('sen-ovc').value,
-                workExperience: parseInt(document.getElementById('work-experience').value) || 0,
-                bestSixPoints: parseInt(document.getElementById('best-six-points').textContent) || 0,
-                status: 'Pending Review'
-            };
-            
-            // Determine final status
-            const req = programmeRequirements[programme];
-            const isSEN = application.senOvc !== 'No';
-            const minPoints = isSEN ? req.senMinPoints : req.minPoints;
-            
-            if (application.bestSixPoints >= minPoints) {
-                // Simple check — in real system we would verify subjects too
-                application.status = 'Qualified';
-            } else {
-                application.status = 'Not Qualified';
-            }
-            
-            // Save to localStorage
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            applications.unshift(application);
-            localStorage.setItem('admissions', JSON.stringify(applications));
-            
-            // Success feedback
-            const btn = e.target.querySelector('button[type="submit"]');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>SUBMITTED SUCCESSFULLY!</span>`;
-            btn.disabled = true;
-            
-            setTimeout(() => {
-                alert(`Application ${application.ref} submitted successfully!`);
-                resetForm();
-                updateAppCount();
-                showTab('all-applications');
-                renderApplicationsTable();
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }, 1200);
-        }
-
-        function resetForm() {
-            document.getElementById('admission-form').reset();
-            document.getElementById('best-six-points').textContent = '0';
-            document.getElementById('total-points').textContent = '0';
-            document.getElementById('prerequisite-section').innerHTML = 
-                `<div class="text-slate-500 italic">Select a programme above to see prerequisite requirements.</div>`;
-            
-            // Clear grade inputs
-            document.querySelectorAll('.grade-input').forEach(input => input.value = '');
-            document.querySelectorAll('.points-display').forEach(el => el.textContent = '0');
-            
-            // Reset receipt number
-            document.getElementById('receipt-number').value = 'REC-2026-' + Date.now().toString().slice(-5);
-        }
-
-        // Render applications table
-        function renderApplicationsTable() {
-            const tbody = document.getElementById('applications-table-body');
-            const noApps = document.getElementById('no-applications');
-            tbody.innerHTML = '';
-            
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            
-            if (applications.length === 0) {
-                noApps.classList.remove('hidden');
-                return;
-            } else {
-                noApps.classList.add('hidden');
-            }
-            
-            applications.forEach(app => {
-                const row = document.createElement('tr');
-                row.className = 'hover:bg-slate-50 cursor-pointer';
-                
-                const statusClass = app.status === 'Qualified' ? 'status-qualified' : 'status-not-qualified';
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 font-mono text-xs text-slate-500">${app.ref}</td>
-                    <td class="px-6 py-4">
-                        <div class="font-semibold">${app.surname}, ${app.firstName}</div>
-                        <div class="text-xs text-slate-500">${app.gender} • ${app.identityNumber}</div>
-                    </td>
-                    <td class="px-6 py-4 text-sm">${app.programme}</td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="font-extrabold text-xl tabular-nums">${app.bestSixPoints}</span>
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <span class="${statusClass}">${app.status}</span>
-                    </td>
-                    <td class="px-6 py-4 text-center text-xs text-slate-500">
-                        ${new Date(app.date).toLocaleDateString('en-GB', {day:'numeric', month:'short'})}
-                    </td>
-                    <td class="px-6 py-4 text-center">
-                        <button onclick="viewApplication(${app.id}); event.stopImmediatePropagation();" 
-                                class="text-blue-600 hover:text-blue-800 p-2">
-                            <i class="fa-solid fa-eye"></i>
-                        </button>
-                    </td>
-                `;
-                
-                row.onclick = () => viewApplication(app.id);
-                tbody.appendChild(row);
-            });
-            
-            document.getElementById('app-count').textContent = applications.length;
-        }
-
-        function viewApplication(id) {
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            const app = applications.find(a => a.id === id);
-            if (!app) return;
-            
-            currentModalRef = id;
-            
-            document.getElementById('modal-ref').textContent = app.ref;
-            document.getElementById('modal-name').textContent = `${app.surname}, ${app.firstName} ${app.otherNames || ''}`;
-            
-            const statusEl = document.getElementById('modal-status-badge');
-            statusEl.innerHTML = `<span class="${app.status === 'Qualified' ? 'status-qualified' : 'status-not-qualified'} px-4 py-1 text-sm">${app.status}</span>`;
-            
-            const content = document.getElementById('modal-content');
-            content.innerHTML = `
-                <div class="grid grid-cols-2 gap-x-8 gap-y-6 text-sm">
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Programme</div>
-                        <div class="font-bold text-lg">${app.programme}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Date Submitted</div>
-                        <div class="font-semibold">${new Date(app.date).toLocaleString()}</div>
-                    </div>
-                    
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Gender / ID</div>
-                        <div>${app.gender} &nbsp; <span class="font-mono">${app.identityNumber}</span></div>
-                    </div>
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Date of Birth</div>
-                        <div class="font-semibold">${app.dob}</div>
-                    </div>
-                    
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">SEN / OVC Status</div>
-                        <div class="font-semibold">${app.senOvc}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Work Experience</div>
-                        <div class="font-semibold">${app.workExperience} months</div>
-                    </div>
-                    
-                    <div class="col-span-2 pt-4 border-t">
-                        <div class="flex items-end gap-x-4">
-                            <div>
-                                <div class="text-xs uppercase tracking-widest text-slate-500">Best 6 Points</div>
-                                <div class="text-6xl font-black text-blue-800 tabular-nums leading-none">${app.bestSixPoints}</div>
-                            </div>
-                            <div class="text-sm pb-2 text-slate-600">out of possible 48</div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('detail-modal').classList.remove('hidden');
-            document.getElementById('detail-modal').classList.add('flex');
-        }
-
-        function hideModal() {
-            const modal = document.getElementById('detail-modal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-        }
-
-        function deleteCurrentApplication() {
-            if (!currentModalRef) return;
-            if (!confirm('Are you sure you want to delete this application?')) return;
-            
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            applications = applications.filter(a => a.id !== currentModalRef);
-            localStorage.setItem('admissions', JSON.stringify(applications));
-            
-            hideModal();
-            renderApplicationsTable();
-            updateAppCount();
-        }
-
-        function updateAppCount() {
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            document.getElementById('app-count').textContent = applications.length;
-        }
-
-        function exportToCSV() {
-            let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-            if (applications.length === 0) {
-                alert("No applications to export.");
-                return;
-            }
-            
-            let csv = 'Ref,Date,Programme,Surname,First Name,Gender,Identity Number,Points,Status,SEN/OVC,Work Experience\n';
-            
-            applications.forEach(app => {
-                csv += `"${app.ref}","${app.date}","${app.programme}","${app.surname}","${app.firstName}","${app.gender}","${app.identityNumber}",${app.bestSixPoints},"${app.status}","${app.senOvc}",${app.workExperience}\n`;
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `DTTTE_Admissions_${new Date().toISOString().slice(0,10)}.csv`;
-            a.click();
-            window.URL.revokeObjectURL(url);
-        }
-
-        function clearAllApplications() {
-            if (!confirm('This will permanently delete ALL applications. Continue?')) return;
-            localStorage.removeItem('admissions');
-            renderApplicationsTable();
-            updateAppCount();
-        }
-
-        // Tab switching
-        function showTab(tab) {
-            // Hide all
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            
-            // Show selected
-            document.getElementById(tab).classList.remove('hidden');
-            
-            // Update active styles
-            document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active', 'bg-blue-800', 'text-white'));
-            
-            if (tab === 'new-application') {
-                document.getElementById('tab-new-application').classList.add('active', 'bg-blue-800', 'text-white');
-            } else {
-                document.getElementById('tab-all-applications').classList.add('active', 'bg-blue-800', 'text-white');
-                renderApplicationsTable();
-            }
-        }
-
-        // Initialize everything
-        function initializeApp() {
-            initializeTailwind();
-            initializeSubjectsTable();
-            
-            // Set default receipt number
-            document.getElementById('receipt-number').value = 'REC-2026-' + Date.now().toString().slice(-5);
-            
-            // Initial calculation trigger
-            setTimeout(() => {
-                calculatePoints();
-            }, 500);
-            
-            // Update app count
-            updateAppCount();
-            
-            // Show new application tab by default
-            document.getElementById('new-application').classList.remove('hidden');
-            document.getElementById('tab-new-application').classList.add('active', 'bg-blue-800', 'text-white');
-            
-            // Keyboard support for grades
-            document.addEventListener('keypress', function(e) {
-                if (e.target.classList.contains('grade-input') && e.key === 'Enter') {
-                    calculatePoints();
-                }
-            });
-            
-            // Demo data (optional - remove in production)
-            // Uncomment the line below if you want sample data on first load
-            // if (!localStorage.getItem('admissions')) { seedDemoData(); }
-        }
-        
-        // Optional: Seed demo data
-        function seedDemoData() {
-            const demo = [{
-                id: Date.now(),
-                ref: 'REC-884721',
-                date: new Date().toISOString(),
-                programme: 'Fashion Design',
-                surname: 'Mahlathini',
-                firstName: 'Mpaphi',
-                otherNames: '',
-                dob: '1995-05-15',
-                gender: 'Male',
-                identityNumber: '123411234',
-                senOvc: 'No',
-                workExperience: 0,
-                bestSixPoints: 34,
-                status: 'Qualified'
-            }];
-            localStorage.setItem('admissions', JSON.stringify(demo));
-        }
-
-        // Boot application
-        window.onload = initializeApp;
-    </script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Main Application Script -->
+    <script src="app.js"></script>
 </body>
 </html>
