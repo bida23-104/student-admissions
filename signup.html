@@ -89,32 +89,48 @@
         function handleSignup(e) {
             e.preventDefault();
             
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Creating account...`;
+            btn.disabled = true;
+            
             const password = document.getElementById('password').value;
             const confirm = document.getElementById('confirm-password').value;
             
             if (password !== confirm) {
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
                 alert("Passwords do not match!");
                 return;
             }
             
             if (password.length < 6) {
-                alert("Password must be at least 6 characters.");
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                alert("Password must be at least 6 characters long.");
                 return;
             }
             
-            const user = {
-                name: document.getElementById('first-name').value + " " + document.getElementById('surname').value,
-                email: document.getElementById('email').value,
-                employeeId: document.getElementById('employee-id').value,
-                role: "Admissions Officer",
-                campus: "Francistown",
-                loginTime: new Date().toISOString()
-            };
-            
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            
-            alert("Account created successfully! You are now logged in.");
-            window.location.href = 'index.html';
+            setTimeout(() => {
+                const user = {
+                    name: document.getElementById('first-name').value + " " + document.getElementById('surname').value,
+                    email: document.getElementById('email').value,
+                    employeeId: document.getElementById('employee-id').value,
+                    role: "Admissions Officer",
+                    campus: "Francistown",
+                    loginTime: new Date().toISOString()
+                };
+                
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                btn.innerHTML = `<i class="fa-solid fa-check mr-2"></i> Account Created!`;
+                
+                setTimeout(() => {
+                    alert("Account created successfully! Welcome aboard.");
+                    window.location.href = 'index.html';
+                }, 700);
+            }, 1300);
         }
     </script>
 </body>
