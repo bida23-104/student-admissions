@@ -232,8 +232,16 @@ function checkPrerequisites(programme) {
         const inputs = document.querySelectorAll('.grade-input');
         let foundGrade = null;
         
+        const searchTerm = subjectName.toLowerCase();
+        
         inputs.forEach(input => {
-            if (input.dataset.subject.toLowerCase().includes(subjectName.toLowerCase().split(' ')[0])) {
+            const subject = input.dataset.subject.toLowerCase();
+            
+            // More robust matching
+            if (subject === searchTerm || 
+                subject.includes(searchTerm) || 
+                searchTerm.includes(subject) ||
+                (searchTerm === 'english' && subject.includes('english'))) {
                 foundGrade = input.value.toUpperCase();
             }
         });
