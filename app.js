@@ -70,10 +70,10 @@ const programmeRequirements = {
 
 // Subjects List
 const subjectsList = [
-    "English", "Setswana", "Mathematics", "Science Single Award", 
+    "Literature in English", "Setswana", "Mathematics", "Science Single Award", 
     "Science Double Award", "Chemistry", "Physics", "Biology", 
     "Human & Social Biology", "History", "Geography", "Social Studies",
-    "Development Studies", "Religious Education", "Literature in English",
+    "Development Studies", "Religious Education", "English",
     "Commerce", "Accounting", "Business Studies", "Computer Studies",
     "Design & Technology", "Music", "Physical Education", "Hospitality & Tourism",
     "Food & Nutrition", "Fashion & Fabrics", "Home Management",
@@ -168,7 +168,7 @@ function calculatePoints() {
     if (totalEl) totalEl.textContent = bestSixTotal;
     
     // Update prerequisites if programme selected
-    const programme = document.getElementById('programme')?.value;
+    const programme = document.getElementById('programme1')?.value;
     if (programme) {
         checkPrerequisites(programme);
     }
@@ -176,7 +176,7 @@ function calculatePoints() {
 
 // Update Prerequisite Section
 function updatePrerequisiteFields() {
-    const programme = document.getElementById('programme').value;
+    const programme = document.getElementById('programme1')?.value;
     const section = document.getElementById('prerequisite-section');
     
     if (!programme) {
@@ -241,7 +241,8 @@ function checkPrerequisites(programme) {
             if (subject === searchTerm || 
                 subject.includes(searchTerm) || 
                 searchTerm.includes(subject) ||
-                (searchTerm === 'english' && subject.includes('english'))) {
+                (searchTerm === 'english' && (subject.includes('english') || subject.includes('literature in english'))) ||
+                (searchTerm === 'literature in english' && (subject.includes('english') || subject.includes('literature')))) {
                 foundGrade = input.value.toUpperCase();
             }
         });
@@ -356,9 +357,9 @@ function submitApplication(e) {
         return;
     }
     
-    const programme = document.getElementById('programme').value;
-    if (!programme) {
-        alert("Please select a programme.");
+    const programme1 = document.getElementById('programme1').value;
+    if (!programme1) {
+        alert("Please select at least your First Choice programme.");
         return;
     }
     
@@ -366,7 +367,9 @@ function submitApplication(e) {
         id: Date.now(),
         ref: 'REC-' + Date.now().toString().slice(-6),
         date: new Date().toISOString(),
-        programme: programme,
+        programme1: programme1,
+        programme2: document.getElementById('programme2').value || null,
+        programme3: document.getElementById('programme3').value || null,
         surname: document.getElementById('surname').value,
         firstName: document.getElementById('first-name').value,
         otherNames: document.getElementById('other-names').value || '',
@@ -459,7 +462,10 @@ function renderApplicationsTable() {
         const row = document.createElement('tr');
         row.className = 'hover:bg-slate-50 cursor-pointer transition-colors';
         
-        const statusClass = app.status === 'Qualified' ? 'status-qualified' : 'status-not-qualified';
+        const statusClass = (app.enrolmentStatus || app.status) === 'Qualified' ? 'status-qualified' : 'status-not-qualified';
+        
+        // Show enrolled programme or first choice
+        const enrolled = app.enrolledProgramme || app.programme1 || app.programme || 'N/A';
         
         row.innerHTML = `
             <td class="px-6 py-4 font-mono text-xs text-slate-500">${app.ref}</td>
@@ -467,12 +473,18 @@ function renderApplicationsTable() {
                 <div class="font-semibold">${app.surname}, ${app.firstName}</div>
                 <div class="text-xs text-slate-500">${app.gender} • ${app.identityNumber}</div>
             </td>
-            <td class="px-6 py-4 text-sm">${app.programme}</td>
+            <td class="px-6 py-4">
+                <div class="text-sm font-semibold text-blue-700">${enrolled}</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">
+                    ${app.programme2 ? '2nd: ' + app.programme2 : ''}
+                    ${app.programme3 ? (app.programme2 ? ' • ' : '') + '3rd: ' + app.programme3 : ''}
+                </div>
+            </td>
             <td class="px-6 py-4 text-center">
                 <span class="font-extrabold text-2xl tabular-nums text-slate-800">${app.bestSixPoints}</span>
             </td>
             <td class="px-6 py-4 text-center">
-                <span class="${statusClass}">${app.status}</span>
+                <span class="${statusClass}">${app.enrolmentStatus || app.status}</span>
             </td>
             <td class="px-6 py-4 text-center text-xs text-slate-500">
                 ${new Date(app.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
