@@ -70,7 +70,7 @@ const programmeRequirements = {
 
 // Subjects List
 const subjectsList = [
-    "English", "Setswana", "Mathematics", "Science Single Award", 
+    "English Language", "Setswana", "Mathematics", "Science Single Award", 
     "Science Double Award", "Chemistry", "Physics", "Biology", 
     "Human & Social Biology", "History", "Geography", "Social Studies",
     "Development Studies", "Religious Education", "Literature in English",
@@ -323,6 +323,25 @@ function validateIdentityNumber() {
 // Submit Application
 function submitApplication(e) {
     e.preventDefault();
+    
+    // === Required Field Validation ===
+    const requiredFields = [
+        { id: 'surname', label: 'Surname' },
+        { id: 'first-name', label: 'First Name' },
+        { id: 'dob', label: 'Date of Birth' },
+        { id: 'gender', label: 'Gender' },
+        { id: 'identity-number', label: 'Identity Number / Passport' },
+        { id: 'nationality', label: 'Nationality' }
+    ];
+    
+    for (let field of requiredFields) {
+        const element = document.getElementById(field.id);
+        if (!element || !element.value.trim()) {
+            alert(`Please fill in the required field: ${field.label}`);
+            element?.focus();
+            return;
+        }
+    }
     
     if (!validateIdentityNumber()) {
         alert("Please correct the Identity Number before submitting.");
