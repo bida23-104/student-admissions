@@ -192,11 +192,17 @@
                             </div>
                             
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Identity Number (9 digits)</label>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Identity Number / Passport <span class="text-red-500">*</span></label>
                                 <input type="text" id="identity-number" maxlength="9" required 
-                                       oninput="validateIdentityNumber()" placeholder="e.g. 123456789"
+                                       oninput="validateIdentityNumber()" placeholder="e.g. 123456789 or Passport Number"
                                        class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm font-mono tracking-[3px]">
                                 <p id="id-error" class="text-red-500 text-xs mt-1 hidden font-medium"></p>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nationality <span class="text-red-500">*</span></label>
+                                <input type="text" id="nationality" value="Botswana" required
+                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
                             </div>
                         </div>
                     </div>
