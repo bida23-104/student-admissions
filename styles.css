@@ -3,13 +3,36 @@
    ============================================ */
 
 :root {
+    /* Light Mode Colors */
     --primary-blue: #1e40af;
     --primary-blue-dark: #1e3a8a;
     --accent: #3b82f6;
+    
+    --bg-primary: #f8fafc;
+    --bg-secondary: #ffffff;
+    --text-primary: #1e2937;
+    --text-secondary: #64748b;
+    --border-color: #e2e8f0;
+}
+
+.dark {
+    /* Dark Mode Colors */
+    --primary-blue: #3b82f6;
+    --primary-blue-dark: #2563eb;
+    --accent: #60a5fa;
+    
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --border-color: #334155;
 }
 
 body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .header-font {
@@ -35,8 +58,32 @@ body {
 
 .form-input:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.2);
     border-color: var(--primary-blue);
+}
+
+.dark .form-input {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.dark .bg-white {
+    background-color: var(--bg-secondary) !important;
+}
+
+.dark .border-slate-100,
+.dark .border-slate-200 {
+    border-color: var(--border-color) !important;
+}
+
+.dark .text-slate-600,
+.dark .text-slate-500 {
+    color: var(--text-secondary) !important;
+}
+
+.dark .text-slate-900 {
+    color: var(--text-primary) !important;
 }
 
 .grade-input {
