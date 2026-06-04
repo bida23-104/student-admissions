@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile • FCTVE Admissions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Poppins:wght@500;600&amp;display=swap');
+        body { font-family: 'Inter', system-ui, sans-serif; }
+        .header-font { font-family: 'Poppins', system-ui, sans-serif; font-weight: 600; }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Top Bar -->
+    <div class="bg-white border-b border-slate-200">
+        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-x-3">
+                <a href="index.html" class="flex items-center gap-x-2 text-slate-600 hover:text-slate-900">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="font-medium text-sm">Back to Portal</span>
+                </a>
+            </div>
+            <div class="flex items-center gap-x-2 text-sm">
+                <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-2xl text-xs font-semibold">Logged in</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-6 pt-10 pb-16">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h1 class="text-3xl font-extrabold text-slate-900">My Profile</h1>
+                <p class="text-slate-600">Manage your admissions officer account</p>
+            </div>
+            <button onclick="logout()" 
+                    class="px-5 py-2.5 text-sm font-semibold flex items-center gap-x-2 text-red-600 hover:bg-red-50 rounded-2xl transition-colors">
+                <i class="fa-solid fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Profile Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 text-center">
+                    <div class="w-24 h-24 mx-auto mb-5 rounded-2xl overflow-hidden ring-4 ring-blue-100">
+                        <img id="profile-avatar" src="https://i.pravatar.cc/96?img=28" alt="Profile Photo" class="w-full h-full object-cover">
+                    </div>
+                    
+                    <div id="profile-name" class="text-2xl font-extrabold text-slate-900">Mpaphi Mahlathini</div>
+                    <div id="profile-role" class="text-blue-700 font-semibold mt-0.5">Senior Admissions Officer</div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <div class="text-xs text-slate-500">Member since</div>
+                        <div id="member-since" class="font-semibold text-slate-700">January 2024</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+                    <h3 class="font-bold text-lg mb-6 flex items-center gap-x-2">
+                        <i class="fa-solid fa-user text-blue-700"></i>
+                        <span>Personal Information</span>
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm">
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Full Name</div>
+                            <div id="full-name" class="font-semibold text-lg">Mpaphi Mahlathini</div>
+                        </div>
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Employee ID</div>
+                            <div class="font-mono font-semibold">FCTVE-2024-0847</div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Work Email</div>
+                            <div id="work-email" class="font-semibold">mpaphi.mahlathini@fctve.ac.bw</div>
+                        </div>
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Campus</div>
+                            <div class="font-semibold">Francistown Main Campus</div>
+                        </div>
+                        
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Department</div>
+                            <div class="font-semibold">Admissions &amp; Enrolment</div>
+                        </div>
+                        <div>
+                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Role</div>
+                            <div class="font-semibold">Senior Admissions Officer</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t flex gap-x-3">
+                        <button onclick="editProfile()" 
+                                class="px-6 py-3 text-sm font-semibold bg-blue-800 text-white rounded-2xl flex items-center gap-x-2 hover:bg-blue-900 transition-colors">
+                            <i class="fa-solid fa-edit"></i>
+                            <span>Edit Profile</span>
+                        </button>
+                        <button onclick="changePassword()" 
+                                class="px-6 py-3 text-sm font-semibold border border-slate-300 rounded-2xl hover:bg-slate-50 transition-colors">
+                            Change Password
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadProfile() {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (!user) {
+                // Not logged in → redirect to login
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Populate profile
+            document.getElementById('profile-name').textContent = user.name || 'Admissions Officer';
+            document.getElementById('full-name').textContent = user.name || 'Admissions Officer';
+            document.getElementById('work-email').textContent = user.email || 'officer@fctve.ac.bw';
+            document.getElementById('profile-role').textContent = user.role || 'Admissions Officer';
+            
+            // Set avatar
+            const avatar = document.getElementById('profile-avatar');
+            if (user.email) {
+                avatar.src = `https://i.pravatar.cc/96?u=${user.email}`;
+            }
+            
+            // Member since
+            const memberSince = document.getElementById('member-since');
+            if (user.loginTime) {
+                const date = new Date(user.loginTime);
+                memberSince.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+            }
+        }
+
+        function editProfile() {
+            const newName = prompt("Enter your full name:", document.getElementById('full-name').textContent);
+            if (newName) {
+                const user = JSON.parse(localStorage.getItem('currentUser'));
+                user.name = newName;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                location.reload();
+            }
+        }
+
+        function changePassword() {
+            alert("Password change feature would open a secure form here.\n\n(Demo: This is a simulated action)");
+        }
+
+        function logout() {
+            if (confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem('currentUser');
+                window.location.href = 'login.html';
+            }
+        }
+
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>
