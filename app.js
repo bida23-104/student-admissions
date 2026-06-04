@@ -70,7 +70,7 @@ const programmeRequirements = {
 
 // Subjects List
 const subjectsList = [
-    "English Language", "Setswana", "Mathematics", "Science Single Award", 
+    "English", "Setswana", "Mathematics", "Science Single Award", 
     "Science Double Award", "Chemistry", "Physics", "Biology", 
     "Human & Social Biology", "History", "Geography", "Social Studies",
     "Development Studies", "Religious Education", "Literature in English",
