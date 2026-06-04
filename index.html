@@ -60,16 +60,26 @@
                         <span>Academic Year 2026/2027</span>
                     </div>
                     
-                    <!-- User Profile (Clickable) -->
-                    <a href="profile.html" class="flex items-center gap-x-3 group">
-                        <div class="text-right hidden md:block">
-                            <div class="font-semibold text-slate-800 text-sm group-hover:text-blue-700 transition-colors">Mpaphi Mahlathini</div>
-                            <div class="text-[10px] text-slate-500 -mt-0.5">Admissions Officer • Palapye</div>
-                        </div>
-                        <div class="w-9 h-9 rounded-2xl overflow-hidden ring-2 ring-white shadow group-hover:ring-blue-200 transition-all">
-                            <img src="https://i.pravatar.cc/36?img=28" alt="Profile" class="w-full h-full object-cover">
-                        </div>
-                    </a>
+                    <!-- Dark Mode Toggle + User Profile -->
+                    <div class="flex items-center gap-x-3">
+                        <!-- Dark Mode Toggle -->
+                        <button onclick="toggleDarkMode()" 
+                                class="w-9 h-9 flex items-center justify-center rounded-2xl border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                title="Toggle Dark Mode">
+                            <i class="fa-solid fa-moon text-slate-600 dark:text-yellow-400" id="dark-mode-icon"></i>
+                        </button>
+
+                        <!-- User Profile (Clickable) -->
+                        <a href="profile.html" class="flex items-center gap-x-3 group">
+                            <div class="text-right hidden md:block">
+                                <div class="font-semibold text-slate-800 dark:text-slate-200 text-sm group-hover:text-blue-700 transition-colors">Mpaphi Mahlathini</div>
+                                <div class="text-[10px] text-slate-500 -mt-0.5">Admissions Officer • Palapye</div>
+                            </div>
+                            <div class="w-9 h-9 rounded-2xl overflow-hidden ring-2 ring-white shadow group-hover:ring-blue-200 transition-all">
+                                <img src="https://i.pravatar.cc/36?img=28" alt="Profile" class="w-full h-full object-cover">
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -533,8 +543,44 @@
         (function checkLogin() {
             const user = localStorage.getItem('currentUser');
             if (!user) {
-                // Uncomment the line below to force login
                 // window.location.href = 'login.html';
+            }
+        })();
+
+        // ========== DARK MODE ==========
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            html.classList.toggle('dark');
+            
+            const isDark = html.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark);
+            
+            updateDarkModeIcon(isDark);
+        }
+
+        function updateDarkModeIcon(isDark) {
+            const icon = document.getElementById('dark-mode-icon');
+            if (!icon) return;
+            
+            if (isDark) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Initialize dark mode from localStorage
+        (function initDarkMode() {
+            const savedMode = localStorage.getItem('darkMode');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (savedMode === 'true' || (savedMode === null && prefersDark)) {
+                document.documentElement.classList.add('dark');
+                setTimeout(() => updateDarkModeIcon(true), 100);
+            } else {
+                setTimeout(() => updateDarkModeIcon(false), 100);
             }
         })();
     </script>
