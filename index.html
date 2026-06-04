@@ -623,7 +623,7 @@
         }
 
         // Initialize dark mode from localStorage
-        (function initDarkMode() {
+        function initDarkMode() {
             const savedMode = localStorage.getItem('darkMode');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
@@ -633,7 +633,10 @@
             } else {
                 setTimeout(() => updateDarkModeIcon(false), 100);
             }
-        })();
+        }
+
+        // Auto initialize dark mode
+        initDarkMode();
     </script>
 </body>
 </html>
