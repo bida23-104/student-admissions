@@ -70,7 +70,7 @@ const programmeRequirements = {
 
 // Subjects List
 const subjectsList = [
-    "English Language", "Setswana", "Mathematics", "Science Single Award", 
+    "English", "Setswana", "Mathematics", "Science Single Award", 
     "Science Double Award", "Chemistry", "Physics", "Biology", 
     "Human & Social Biology", "History", "Geography", "Social Studies",
     "Development Studies", "Religious Education", "Literature in English",
@@ -349,6 +349,16 @@ function submitApplication(e) {
         senOvc: document.getElementById('sen-ovc').value,
         workExperience: parseInt(document.getElementById('work-experience').value) || 0,
         bestSixPoints: parseInt(document.getElementById('best-six-points').textContent) || 0,
+        
+        // New fields added
+        receiptNumber: document.getElementById('receipt-number').value,
+        kinName: document.getElementById('kin-name')?.value || '',
+        kinRelationship: document.getElementById('kin-relationship')?.value || '',
+        kinPhone: document.getElementById('kin-phone')?.value || '',
+        kinEmail: document.getElementById('kin-email')?.value || '',
+        vocationalQualification: document.getElementById('vocational-qualification')?.value || '',
+        otherQualifications: document.getElementById('other-qualifications')?.value || '',
+        
         status: 'Pending Review'
     };
     
