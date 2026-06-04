@@ -159,27 +159,50 @@
         function handleLogin(e) {
             e.preventDefault();
             
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalHTML = btn.innerHTML;
+            
+            // Show loading state
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Signing in...`;
+            btn.disabled = true;
+            
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            // Simple demo validation
-            if (email && password.length >= 4) {
-                // Save login state
-                const user = {
-                    name: "Mpaphi Mahlathini",
-                    email: email,
-                    role: "Senior Admissions Officer",
-                    campus: "Francistown",
-                    loginTime: new Date().toISOString()
-                };
-                
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                
-                // Redirect to main portal
-                window.location.href = 'index.html';
-            } else {
-                alert("Please enter valid credentials.");
-            }
+            setTimeout(() => {
+                if (email && password.length >= 4) {
+                    const user = {
+                        name: "Mpaphi Mahlathini",
+                        email: email,
+                        role: "Senior Admissions Officer",
+                        campus: "Francistown",
+                        loginTime: new Date().toISOString()
+                    };
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    window.location.href = 'index.html';
+                } else {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                    showErrorToast("Invalid credentials. Please try again.");
+                }
+            }, 900);
+        }
+        
+        function showErrorToast(message) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 bg-red-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-x-3 z-50`;
+            toast.innerHTML = `
+                <i class="fa-solid fa-exclamation-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.transition = 'all 0.3s ease';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
         }
 
         // ========== PASSWORD RESET FUNCTIONS ==========
