@@ -358,8 +358,18 @@ function submitApplication(e) {
     }
     
     const programme1 = document.getElementById('programme1').value;
+    const programme2 = document.getElementById('programme2').value;
+    const programme3 = document.getElementById('programme3').value;
+
     if (!programme1) {
         alert("Please select at least your First Choice programme.");
+        return;
+    }
+
+    // Prevent selecting the same programme more than once
+    const selectedProgrammes = [programme1, programme2, programme3].filter(p => p);
+    if (new Set(selectedProgrammes).size !== selectedProgrammes.length) {
+        alert("You cannot select the same programme more than once across your choices.");
         return;
     }
     
@@ -368,8 +378,8 @@ function submitApplication(e) {
         ref: 'REC-' + Date.now().toString().slice(-6),
         date: new Date().toISOString(),
         programme1: programme1,
-        programme2: document.getElementById('programme2').value || null,
-        programme3: document.getElementById('programme3').value || null,
+        programme2: programme2 || null,
+        programme3: programme3 || null,
         surname: document.getElementById('surname').value,
         firstName: document.getElementById('first-name').value,
         otherNames: document.getElementById('other-names').value || '',
@@ -392,12 +402,34 @@ function submitApplication(e) {
         status: 'Pending Review'
     };
     
-    // Determine status
-    const req = programmeRequirements[programme];
+    // Determine which programme the student is enrolled in (based on choices + criteria)
+    let enrolledProgramme = null;
+    let finalStatus = 'Pending Review';
+
+    const choices = [programme1, programme2, programme3].filter(Boolean);
     const isSEN = application.senOvc !== 'No';
-    const minPoints = isSEN ? req.senMinPoints : req.minPoints;
-    
-    application.status = (application.bestSixPoints >= minPoints) ? 'Qualified' : 'Not Qualified';
+
+    for (let choice of choices) {
+        const req = programmeRequirements[choice];
+        if (!req) continue;
+
+        const minPoints = isSEN ? req.senMinPoints : req.minPoints;
+        const meetsPoints = application.bestSixPoints >= minPoints;
+
+        if (meetsPoints) {
+            enrolledProgramme = choice;
+            finalStatus = 'Qualified';
+            break;
+        }
+    }
+
+    if (!enrolledProgramme) {
+        enrolledProgramme = programme1;
+        finalStatus = 'Not Qualified';
+    }
+
+    application.enrolledProgramme = enrolledProgramme;
+    application.status = finalStatus;
     
     // Save
     let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
@@ -662,15 +694,23 @@ function initProgrammeSliders() {
     
     programmes.forEach((prog, index) => {
         const req = programmeRequirements[prog];
+        const progData = programmesData.find(p => p.code === prog) || {};
+        const imageName = progData.image || 'default';
         
         // Create Swiper Slide
         const slide = document.createElement('div');
         slide.className = 'swiper-slide';
+        
+        const imageHTML = (imageName && imageName !== 'default')
+            ? `<img src="${imageName}" class="w-full h-full object-cover" alt="${prog}">`
+            : `<div class="h-full w-full bg-gradient-to-br from-blue-800 to-slate-900 flex items-center justify-center">
+                   <i class="fa-solid fa-graduation-cap text-white text-6xl opacity-75"></i>
+               </div>`;
+        
         slide.innerHTML = `
             <div class="programme-card bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm h-full">
-                <div class="relative h-56">
-                    <img src="https://picsum.photos/id/${(index + 10) * 3}/800/600" 
-                         class="w-full h-full object-cover" alt="${prog}">
+                <div class="relative h-56 overflow-hidden">
+                    ${imageHTML}
                     <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60"></div>
                     <div class="absolute bottom-4 left-5 text-white">
                         <div class="text-xs tracking-[2px] font-semibold opacity-75">DIPLOMA PROGRAMME</div>
