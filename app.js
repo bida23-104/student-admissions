@@ -333,7 +333,8 @@ function validateIdentityNumber() {
 function submitApplication(e) {
     e.preventDefault();
     
-    // === Required Field Validation ===
+    try {
+        // === Required Field Validation ===
     const requiredFields = [
         { id: 'surname', label: 'Surname' },
         { id: 'first-name', label: 'First Name' },
@@ -756,7 +757,7 @@ function initProgrammeSliders() {
         card.onclick = () => {
             showTab('new-application');
             setTimeout(() => {
-                const select = document.getElementById('programme');
+                const select = document.getElementById('programme1');
                 if (select) {
                     select.value = prog;
                     updatePrerequisiteFields();
