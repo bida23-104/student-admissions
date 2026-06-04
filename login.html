@@ -65,7 +65,7 @@
                                 <input type="checkbox" checked class="accent-blue-800">
                                 <span class="text-slate-600">Remember me</span>
                             </label>
-                            <a href="#" class="text-blue-700 hover:underline font-medium">Forgot password?</a>
+                            <a href="#" onclick="showResetModal(); return false;" class="text-blue-700 hover:underline font-medium">Forgot password?</a>
                         </div>
 
                         <!-- Submit -->
@@ -96,6 +96,47 @@
             <p class="text-center text-xs text-slate-400 mt-8">
                 © 2026 Francistown College of Technical &amp; Vocational Education
             </p>
+        </div>
+    </div>
+
+    <!-- Password Reset Modal -->
+    <div id="reset-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-6">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8">
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h3 class="text-2xl font-extrabold text-slate-900">Reset Password</h3>
+                    <p class="text-sm text-slate-600 mt-1">We'll send a reset link to your work email.</p>
+                </div>
+                <button onclick="hideResetModal()" class="text-slate-400 hover:text-slate-600 text-2xl leading-none">&times;</button>
+            </div>
+
+            <!-- Step 1: Enter Email -->
+            <div id="reset-step-1">
+                <div class="mb-5">
+                    <label class="block text-sm font-semibold text-slate-700 mb-1.5">Work Email Address</label>
+                    <input type="email" id="reset-email" value="mpaphi.mahlathini@fctve.ac.bw" 
+                           class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
+                </div>
+                
+                <button onclick="sendResetLink()" 
+                        class="w-full py-3.5 bg-blue-800 hover:bg-blue-900 transition-all text-white font-bold rounded-2xl text-sm tracking-wider">
+                    SEND RESET LINK
+                </button>
+            </div>
+
+            <!-- Step 2: Link Sent Confirmation -->
+            <div id="reset-step-2" class="hidden text-center py-4">
+                <div class="w-16 h-16 mx-auto mb-4 bg-emerald-100 rounded-full flex items-center justify-center">
+                    <i class="fa-solid fa-envelope text-emerald-600 text-3xl"></i>
+                </div>
+                <h4 class="font-extrabold text-lg text-slate-900">Check your email</h4>
+                <p class="text-sm text-slate-600 mt-2">We've sent a password reset link to<br><span id="sent-email" class="font-semibold"></span></p>
+                
+                <button onclick="hideResetModal()" 
+                        class="mt-6 w-full py-3 border border-slate-300 rounded-2xl text-sm font-semibold hover:bg-slate-50 transition-colors">
+                    Back to Login
+                </button>
+            </div>
         </div>
     </div>
 
@@ -141,9 +182,45 @@
             }
         }
 
-        // Auto-focus email
+        // ========== PASSWORD RESET FUNCTIONS ==========
+        
+        function showResetModal() {
+            document.getElementById('reset-modal').classList.remove('hidden');
+            document.getElementById('reset-modal').classList.add('flex');
+            
+            // Reset to step 1
+            document.getElementById('reset-step-1').classList.remove('hidden');
+            document.getElementById('reset-step-2').classList.add('hidden');
+        }
+
+        function hideResetModal() {
+            document.getElementById('reset-modal').classList.remove('flex');
+            document.getElementById('reset-modal').classList.add('hidden');
+        }
+
+        function sendResetLink() {
+            const emailInput = document.getElementById('reset-email').value;
+            
+            if (!emailInput) {
+                alert("Please enter your work email.");
+                return;
+            }
+            
+            // Simulate sending reset link
+            document.getElementById('sent-email').textContent = emailInput;
+            
+            // Hide step 1, show step 2
+            document.getElementById('reset-step-1').classList.add('hidden');
+            document.getElementById('reset-step-2').classList.remove('hidden');
+            
+            // In a real system, this would call an API to send the email
+            console.log(`[Demo] Password reset link sent to: ${emailInput}`);
+        }
+
+        // Auto-focus email on page load
         window.onload = function() {
-            document.getElementById('email').focus();
+            const emailField = document.getElementById('email');
+            if (emailField) emailField.focus();
         }
     </script>
 </body>
