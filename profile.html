@@ -47,16 +47,23 @@
             <!-- Profile Card -->
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 text-center">
-                    <div class="w-24 h-24 mx-auto mb-5 rounded-2xl overflow-hidden ring-4 ring-blue-100">
-                        <img id="profile-avatar" src="https://i.pravatar.cc/96?img=28" alt="Profile Photo" class="w-full h-full object-cover">
+                    <div class="relative w-28 h-28 mx-auto mb-5">
+                        <div class="w-28 h-28 rounded-2xl overflow-hidden ring-4 ring-blue-100">
+                            <img id="profile-avatar" src="https://i.pravatar.cc/112?img=28" alt="Profile Photo" class="w-full h-full object-cover">
+                        </div>
+                        <button onclick="changeProfilePhoto()" 
+                                class="absolute -bottom-1 -right-1 bg-white border shadow px-2.5 py-1 rounded-xl text-xs flex items-center gap-x-1 hover:bg-slate-50">
+                            <i class="fa-solid fa-camera text-blue-700"></i>
+                            <span class="text-[10px] font-semibold">Change</span>
+                        </button>
                     </div>
                     
-                    <div id="profile-name" class="text-2xl font-extrabold text-slate-900">Mpaphi Mahlathini</div>
-                    <div id="profile-role" class="text-blue-700 font-semibold mt-0.5">Senior Admissions Officer</div>
+                    <div id="profile-name" class="text-2xl font-extrabold text-slate-900"></div>
+                    <div id="profile-role" class="text-blue-700 font-semibold mt-0.5"></div>
                     
                     <div class="mt-6 pt-6 border-t">
                         <div class="text-xs text-slate-500">Member since</div>
-                        <div id="member-since" class="font-semibold text-slate-700">January 2024</div>
+                        <div id="member-since" class="font-semibold text-slate-700"></div>
                     </div>
                 </div>
             </div>
@@ -64,49 +71,31 @@
             <!-- Details -->
             <div class="lg:col-span-2">
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                    <h3 class="font-bold text-lg mb-6 flex items-center gap-x-2">
-                        <i class="fa-solid fa-user text-blue-700"></i>
-                        <span>Personal Information</span>
-                    </h3>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm">
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Full Name</div>
-                            <div id="full-name" class="font-semibold text-lg">Mpaphi Mahlathini</div>
-                        </div>
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Employee ID</div>
-                            <div class="font-mono font-semibold">FCTVE-2024-0847</div>
-                        </div>
-                        
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Work Email</div>
-                            <div id="work-email" class="font-semibold">mpaphi.mahlathini@fctve.ac.bw</div>
-                        </div>
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Campus</div>
-                            <div class="font-semibold">Francistown Main Campus</div>
-                        </div>
-                        
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Department</div>
-                            <div class="font-semibold">Admissions &amp; Enrolment</div>
-                        </div>
-                        <div>
-                            <div class="text-xs uppercase tracking-widest text-slate-500 mb-1">Role</div>
-                            <div class="font-semibold">Senior Admissions Officer</div>
-                        </div>
-                    </div>
-
-                    <div class="mt-8 pt-6 border-t flex gap-x-3">
-                        <button onclick="editProfile()" 
-                                class="px-6 py-3 text-sm font-semibold bg-blue-800 text-white rounded-2xl flex items-center gap-x-2 hover:bg-blue-900 transition-colors">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-lg flex items-center gap-x-2">
+                            <i class="fa-solid fa-user text-blue-700"></i>
+                            <span>Personal Information</span>
+                        </h3>
+                        <button onclick="toggleEditMode()" id="edit-btn"
+                                class="px-5 py-2 text-sm font-semibold bg-blue-800 text-white rounded-2xl flex items-center gap-x-2 hover:bg-blue-900 transition-colors">
                             <i class="fa-solid fa-edit"></i>
                             <span>Edit Profile</span>
                         </button>
-                        <button onclick="changePassword()" 
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm" id="profile-fields">
+                        <!-- Populated dynamically by JavaScript -->
+                    </div>
+
+                    <div class="mt-8 pt-6 border-t flex gap-x-3" id="action-buttons" style="display: none;">
+                        <button onclick="saveProfile()" 
+                                class="px-6 py-3 text-sm font-semibold bg-emerald-600 text-white rounded-2xl flex items-center gap-x-2 hover:bg-emerald-700 transition-colors">
+                            <i class="fa-solid fa-save"></i>
+                            <span>Save Changes</span>
+                        </button>
+                        <button onclick="cancelEdit()" 
                                 class="px-6 py-3 text-sm font-semibold border border-slate-300 rounded-2xl hover:bg-slate-50 transition-colors">
-                            Change Password
+                            Cancel
                         </button>
                     </div>
                 </div>
@@ -116,32 +105,36 @@
 
     <script>
         function loadProfile() {
-            const user = JSON.parse(localStorage.getItem('currentUser'));
+            currentUser = JSON.parse(localStorage.getItem('currentUser'));
             
-            if (!user) {
-                // Not logged in → redirect to login
+            if (!currentUser) {
                 window.location.href = 'login.html';
                 return;
             }
             
-            // Populate profile
-            document.getElementById('profile-name').textContent = user.name || 'Admissions Officer';
-            document.getElementById('full-name').textContent = user.name || 'Admissions Officer';
-            document.getElementById('work-email').textContent = user.email || 'officer@fctve.ac.bw';
-            document.getElementById('profile-role').textContent = user.role || 'Admissions Officer';
+            // Set basic info
+            document.getElementById('profile-name').textContent = currentUser.name || 'Admissions Officer';
+            document.getElementById('profile-role').textContent = currentUser.role || 'Admissions Officer';
             
             // Set avatar
             const avatar = document.getElementById('profile-avatar');
-            if (user.email) {
-                avatar.src = `https://i.pravatar.cc/96?u=${user.email}`;
+            if (currentUser.avatar) {
+                avatar.src = currentUser.avatar;
+            } else if (currentUser.email) {
+                avatar.src = `https://i.pravatar.cc/112?u=${currentUser.email}`;
             }
             
             // Member since
             const memberSince = document.getElementById('member-since');
-            if (user.loginTime) {
-                const date = new Date(user.loginTime);
+            if (currentUser.loginTime) {
+                const date = new Date(currentUser.loginTime);
                 memberSince.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+            } else {
+                memberSince.textContent = "June 2026";
             }
+            
+            // Render dynamic fields
+            renderProfileFields();
         }
 
         function editProfile() {
@@ -154,8 +147,19 @@
             }
         }
 
+        function changeProfilePhoto() {
+            const url = prompt("Enter new profile photo URL:", currentUser.avatar || `https://i.pravatar.cc/112?u=${currentUser.email}`);
+            if (url) {
+                currentUser.avatar = url;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                document.getElementById('profile-avatar').src = url;
+                showToast("Profile photo updated!");
+            }
+        }
+
         function changePassword() {
-            alert("Password change feature would open a secure form here.\n\n(Demo: This is a simulated action)");
+            const newPass = prompt("Enter new password (demo):");
+            if (newPass) showToast("Password changed successfully! (Demo mode)");
         }
 
         function logout() {
@@ -163,6 +167,14 @@
                 localStorage.removeItem('currentUser');
                 window.location.href = 'login.html';
             }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 bg-emerald-600 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center gap-x-2 z-50`;
+            toast.innerHTML = `<i class="fa-solid fa-check-circle"></i> <span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
         }
 
         window.onload = loadProfile;
