@@ -70,10 +70,10 @@ const programmeRequirements = {
 
 // Subjects List
 const subjectsList = [
-    "Literature in English", "Setswana", "Mathematics", "Science Single Award", 
+    "English", "Setswana", "Mathematics", "Science Single Award", 
     "Science Double Award", "Chemistry", "Physics", "Biology", 
     "Human & Social Biology", "History", "Geography", "Social Studies",
-    "Development Studies", "Religious Education", "English",
+    "Development Studies", "Religious Education", "Literature in English",
     "Commerce", "Accounting", "Business Studies", "Computer Studies",
     "Design & Technology", "Music", "Physical Education", "Hospitality & Tourism",
     "Food & Nutrition", "Fashion & Fabrics", "Home Management",
@@ -241,8 +241,7 @@ function checkPrerequisites(programme) {
             if (subject === searchTerm || 
                 subject.includes(searchTerm) || 
                 searchTerm.includes(subject) ||
-                (searchTerm === 'english' && (subject.includes('english') || subject.includes('literature in english'))) ||
-                (searchTerm === 'literature in english' && (subject.includes('english') || subject.includes('literature')))) {
+                (searchTerm === 'english' && subject.includes('english'))) {
                 foundGrade = input.value.toUpperCase();
             }
         });
