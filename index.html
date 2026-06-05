@@ -112,12 +112,6 @@
                 <span>New Application</span>
             </button>
             
-            <button onclick="clearFormDraft()" 
-                    class="px-4 py-2 text-xs font-medium flex items-center gap-x-1.5 text-red-600 hover:bg-red-50 rounded-2xl transition-colors border border-red-200">
-                <i class="fa-solid fa-trash-alt"></i>
-                <span>Clear Draft</span>
-            </button>
-            
             <button onclick="showTab('programmes')" id="tab-programmes"
                     class="nav-tab px-7 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
                 <i class="fa-solid fa-images mr-1"></i>
@@ -142,75 +136,88 @@
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
                         <div class="section-header">
                             <i class="fa-solid fa-graduation-cap"></i>
-                            <span>Programme Selection (Rank your choices)</span>
+                            <span>Programme Selection (Ranked Preferences)</span>
                         </div>
                         
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <!-- 1st Choice -->
+                        <div class="mb-4 p-3 bg-blue-50 dark:bg-slate-800 rounded-2xl text-xs text-blue-700 dark:text-blue-300 flex items-start gap-x-2">
+                            <i class="fa-solid fa-info-circle mt-0.5"></i>
+                            <span>Select up to 3 ranked choices. Duplicates are not allowed. The 1st choice is primary for initial assessment.</span>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                    <span class="bg-blue-800 text-white text-xs px-2 py-0.5 rounded mr-1">1st</span> 
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-x-1.5">
+                                    <span class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-blue-800 text-white rounded-full">1</span>
                                     First Choice <span class="text-red-500">*</span>
                                 </label>
-                                <select id="programme1" required onchange="updatePrerequisiteFields()"
+                                <select id="choice1" required onchange="validateChoices(); updatePrerequisiteFields()"
                                         class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
                                     <option value="">-- Select Programme --</option>
-                                    <option value="Fashion Design">Diploma in Fashion Design</option>
                                     <option value="Beauty Therapy">Diploma in Beauty Therapy</option>
                                     <option value="Travel Management">Diploma in Travel Management</option>
-                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Culinary Arts">Diploma in Culinary Arts</option>
+                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Computer Networking">Diploma in Computer Networking</option>
                                     <option value="Systems Administration">Diploma in Systems Administration</option>
+                                    <option value="Textile Design">Diploma in Textile Design</option>
+                                    <option value="Fashion Design">Diploma in Fashion Design</option>
+                                    <option value="CVET">Certificate in Technical and Vocational Education (CVET)</option>
                                     <option value="Health and Wellness">Diploma in Health and Wellness</option>
                                 </select>
                             </div>
                             
-                            <!-- 2nd Choice -->
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                    <span class="bg-emerald-600 text-white text-xs px-2 py-0.5 rounded mr-1">2nd</span> 
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-x-1.5">
+                                    <span class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-slate-500 text-white rounded-full">2</span>
                                     Second Choice
                                 </label>
-                                <select id="programme2" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="">-- Select Programme --</option>
-                                    <option value="Fashion Design">Diploma in Fashion Design</option>
+                                <select id="choice2" onchange="validateChoices(); updatePrerequisiteFields()"
+                                        class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
+                                    <option value="">-- None (Optional) --</option>
                                     <option value="Beauty Therapy">Diploma in Beauty Therapy</option>
                                     <option value="Travel Management">Diploma in Travel Management</option>
-                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Culinary Arts">Diploma in Culinary Arts</option>
+                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Computer Networking">Diploma in Computer Networking</option>
                                     <option value="Systems Administration">Diploma in Systems Administration</option>
+                                    <option value="Textile Design">Diploma in Textile Design</option>
+                                    <option value="Fashion Design">Diploma in Fashion Design</option>
+                                    <option value="CVET">Certificate in Technical and Vocational Education (CVET)</option>
                                     <option value="Health and Wellness">Diploma in Health and Wellness</option>
                                 </select>
                             </div>
                             
-                            <!-- 3rd Choice -->
                             <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">
-                                    <span class="bg-amber-600 text-white text-xs px-2 py-0.5 rounded mr-1">3rd</span> 
+                                <label class="block text-sm font-semibold text-slate-700 mb-1.5 flex items-center gap-x-1.5">
+                                    <span class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold bg-slate-500 text-white rounded-full">3</span>
                                     Third Choice
                                 </label>
-                                <select id="programme3" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="">-- Select Programme --</option>
-                                    <option value="Fashion Design">Diploma in Fashion Design</option>
+                                <select id="choice3" onchange="validateChoices(); updatePrerequisiteFields()"
+                                        class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
+                                    <option value="">-- None (Optional) --</option>
                                     <option value="Beauty Therapy">Diploma in Beauty Therapy</option>
                                     <option value="Travel Management">Diploma in Travel Management</option>
-                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Culinary Arts">Diploma in Culinary Arts</option>
+                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
                                     <option value="Computer Networking">Diploma in Computer Networking</option>
                                     <option value="Systems Administration">Diploma in Systems Administration</option>
+                                    <option value="Textile Design">Diploma in Textile Design</option>
+                                    <option value="Fashion Design">Diploma in Fashion Design</option>
+                                    <option value="CVET">Certificate in Technical and Vocational Education (CVET)</option>
                                     <option value="Health and Wellness">Diploma in Health and Wellness</option>
                                 </select>
                             </div>
                         </div>
                         
-                        <p class="text-xs text-slate-500 mt-3">Applicants may select up to 3 programme choices in order of preference.</p>
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Receipt Number</label>
                                 <input type="text" id="receipt-number" placeholder="Enter Receipt Number (e.g. REC-2026-00123)"
                                        class="form-input w-full px-4 py-3.5 border border-slate-300 rounded-2xl text-sm font-mono tracking-widest">
                                 <p class="text-xs text-slate-500 mt-1">Official receipt number issued to the applicant.</p>
+                            </div>
+                            <div class="flex items-end">
+                                <div id="choices-error" class="hidden text-red-600 text-sm font-medium bg-red-50 px-3 py-1.5 rounded-xl"></div>
                             </div>
                         </div>
                     </div>
@@ -344,15 +351,14 @@
                         </div>
                     </div>
 
-                    <!-- Triple Prerequisite Check -->
+                    <!-- Prerequisites -->
                     <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header mb-6">
+                        <div class="section-header">
                             <i class="fa-solid fa-check-double"></i>
-                            <span>Prerequisite Check for All Choices</span>
+                            <span>Prerequisite Check</span>
                         </div>
-                        
-                        <div id="prerequisite-section" class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                            <!-- Populated dynamically for 1st, 2nd, and 3rd choice -->
+                        <div id="prerequisite-section">
+                            <div class="text-slate-500 italic">Select a programme above to view requirements.</div>
                         </div>
                     </div>
 
@@ -623,7 +629,7 @@
         }
 
         // Initialize dark mode from localStorage
-        function initDarkMode() {
+        (function initDarkMode() {
             const savedMode = localStorage.getItem('darkMode');
             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
             
@@ -633,10 +639,7 @@
             } else {
                 setTimeout(() => updateDarkModeIcon(false), 100);
             }
-        }
-
-        // Auto initialize dark mode
-        initDarkMode();
+        })();
     </script>
 </body>
 </html>
