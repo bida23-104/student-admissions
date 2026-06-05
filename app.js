@@ -1,296 +1,391 @@
-// ============================================
-// DTT&TE Admissions Portal - Main JavaScript
-// ============================================
+// FCTVE Student Admissions Portal - Main Application Logic
+// Complete functional implementation with criteria-based validation
 
-// Grade to Points Mapping
-const gradePoints = {
-    'A': 8, 'B': 7, 'C': 6, 'D': 5, 'E': 4, 'F': 3, 'G': 0,
-    'a': 8, 'b': 7, 'c': 6, 'd': 5, 'e': 4, 'f': 3, 'g': 0
+// ==================== DATA DEFINITIONS ====================
+const GRADE_POINTS = {
+    'A': 8, 'B': 7, 'C': 6, 'D': 5, 'E': 4, 'F': 3, 'G': 0, '': 0, ' ': 0
 };
 
-// Programme Requirements
-const programmeRequirements = {
-    "Fashion Design": {
-        subjects: ["English", "Fashion & Fabrics"],
-        minGrade: "E",
+const SUBJECTS = [
+    // Core Compulsory
+    { code: 'EN', name: 'English Language', category: 'Core' },
+    { code: 'SE', name: 'Setswana', category: 'Core' },
+    { code: 'MA', name: 'Mathematics', category: 'Core' },
+    // Sciences
+    { code: 'SA', name: 'Science Single Award', category: 'Sciences' },
+    { code: 'SD', name: 'Science Double Award', category: 'Sciences' },
+    { code: 'CH', name: 'Chemistry', category: 'Sciences' },
+    { code: 'PH', name: 'Physics', category: 'Sciences' },
+    { code: 'BI', name: 'Biology', category: 'Sciences' },
+    { code: 'HS', name: 'Human & Social Biology', category: 'Sciences' },
+    // Humanities
+    { code: 'HI', name: 'History', category: 'Humanities' },
+    { code: 'GE', name: 'Geography', category: 'Humanities' },
+    { code: 'SS', name: 'Social Studies', category: 'Humanities' },
+    { code: 'DS', name: 'Development Studies', category: 'Humanities' },
+    { code: 'RE', name: 'Religious Education', category: 'Humanities' },
+    { code: 'LE', name: 'Literature in English', category: 'Humanities' },
+    // Business
+    { code: 'CO', name: 'Commerce', category: 'Business' },
+    { code: 'AC', name: 'Accounting', category: 'Business' },
+    { code: 'BS', name: 'Business Studies', category: 'Business' },
+    // Technical & Creative
+    { code: 'CS', name: 'Computer Studies', category: 'Technical' },
+    { code: 'AD', name: 'Art & Design', category: 'Technical' },
+    { code: 'DT', name: 'Design & Technology', category: 'Technical' },
+    { code: 'MU', name: 'Music', category: 'Technical' },
+    { code: 'PE', name: 'Physical Education', category: 'Technical' },
+    // Home Economics
+    { code: 'HT', name: 'Hospitality & Tourism Studies', category: 'Home Economics' },
+    { code: 'FN', name: 'Food & Nutrition', category: 'Home Economics' },
+    { code: 'FF', name: 'Fashion & Fabric', category: 'Home Economics' },
+    { code: 'HM', name: 'Home Management', category: 'Home Economics' },
+    // Agriculture
+    { code: 'AP', name: 'Animal Production', category: 'Agriculture' },
+    { code: 'FC', name: 'Field Crop Production', category: 'Agriculture' },
+    { code: 'HO', name: 'Horticulture', category: 'Agriculture' },
+    { code: 'AG', name: 'Agriculture', category: 'Agriculture' }
+];
+
+const PROGRAMMES = [
+    { value: 'Beauty Therapy', label: 'Diploma in Beauty Therapy' },
+    { value: 'Travel Management', label: 'Diploma in Travel Management' },
+    { value: 'Culinary Arts', label: 'Diploma in Culinary Arts' },
+    { value: 'Hospitality Management', label: 'Diploma in Hospitality Management' },
+    { value: 'Computer Networking', label: 'Diploma in Computer Networking' },
+    { value: 'Systems Administration', label: 'Diploma in Systems Administration' },
+    { value: 'Textile Design', label: 'Diploma in Textile Design' },
+    { value: 'Fashion Design', label: 'Diploma in Fashion Design' },
+    { value: 'CVET', label: 'Certificate in Technical and Vocational Education (CVET)' },
+    { value: 'Health and Wellness', label: 'Diploma in Health and Wellness' }
+];
+
+// Detailed requirements based on programmes sheet criteria
+const PROGRAMME_REQUIREMENTS = {
+    'Beauty Therapy': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Learn fashion design, pattern making, garment construction, and textile technology."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' },
+            { code: 'BI', minPoints: 5, name: 'Biology' }
+        ],
+        relatedScience: ['SA', 'SD', 'CH', 'PH', 'HS'],
+        note: 'Related Science subjects (SA/SD/CH/PH/HS) accepted in place of Biology.'
     },
-    "Beauty Therapy": {
-        subjects: ["English", "Biology"],
-        minGrade: "D",
+    'Travel Management': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Professional beauty therapy including skincare, makeup, nail technology and wellness treatments."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' },
+            { code: 'MA', minPoints: 5, name: 'Mathematics' }
+        ],
+        addedAdvantage: ['Geography (GE)', 'History (HI)', 'Development Studies (DS)', '2+ years work experience'],
+        altPathway: 'Foundation in Hospitality and Tourism or equivalent'
     },
-    "Travel Management": {
-        subjects: ["English", "Mathematics"],
-        minGrade: "D",
+    'Culinary Arts': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Tourism operations, travel agency management, tour guiding and hospitality services."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' },
+            { code: 'FN', minPoints: 5, name: 'Food & Nutrition' }
+        ],
+        addedAdvantage: ['Food Studies / Hospitality (HT)', '2+ years relevant work experience'],
+        altPathway: 'Foundation in Hospitality and Tourism or equivalent'
     },
-    "Hospitality Management": {
-        subjects: ["English", "Food & Nutrition"],
-        minGrade: "D",
+    'Hospitality Management': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Hotel operations, food & beverage management, customer service and event management."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' },
+            { code: 'FN', minPoints: 5, name: 'Food & Nutrition' }
+        ],
+        addedAdvantage: ['Tourism/Hospitality Studies (HT)', '2+ years work experience in related field'],
+        altPathway: 'Foundation in Hospitality and Tourism or equivalent'
     },
-    "Culinary Arts": {
-        subjects: ["English", "Food & Nutrition"],
-        minGrade: "D",
+    'Computer Networking': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Professional cookery, food production, kitchen management and international cuisine."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'MA', minPoints: 5, name: 'Mathematics' },
+            { code: 'EN', minPoints: 4, name: 'English Language' }
+        ],
+        addedAdvantage: ['Computer Studies (CS) pass or better'],
+        altPathway: 'BTEP Certificate in ICT or equivalent with merit in Integrated Project'
     },
-    "Computer Networking": {
-        subjects: ["Mathematics", "English"],
-        minGrade: "D",
+    'Systems Administration': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Network infrastructure, cybersecurity, cloud computing and IT systems administration."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'MA', minPoints: 5, name: 'Mathematics' },
+            { code: 'EN', minPoints: 4, name: 'English Language' }
+        ],
+        addedAdvantage: ['Computer Studies (CS)'],
+        altPathway: 'BTEP Certificate in ICT or equivalent with merit in Integrated Project'
     },
-    "Systems Administration": {
-        subjects: ["Mathematics", "English"],
-        minGrade: "D",
+    'Textile Design': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Server management, system security, database administration and IT support."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' }
+        ],
+        addedAdvantage: ['Art & Design (AD) or Fashion & Fabric (FF)'],
+        altPathway: 'Level 5 Certificate in Textile Design or Trade Test B in Fabric/Dyeing/Printing'
     },
-    "Health and Wellness": {
-        subjects: ["English", "Physical Education"],
-        minGrade: "D",
+    'Fashion Design': {
         minPoints: 28,
-        senMinPoints: 26,
-        description: "Health promotion, fitness training, wellness coaching and community health education."
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 4, name: 'English Language' },
+            { code: 'FF', minPoints: 4, name: 'Fashion & Fabric' }
+        ],
+        addedAdvantage: ['Art & Design (AD)', 'Home Management (HM)'],
+        note: 'SEN/OVC/RAD pathway available with lower threshold.'
+    },
+    'CVET': {
+        minPoints: 0,
+        minPointsSpecial: 0,
+        requiredSubjects: [],
+        note: 'Requires National Craft Certificate (NCC), Diploma or Higher National Diploma in any Vocational/Technical field. Programme is usually self-sponsored.'
+    },
+    'Health and Wellness': {
+        minPoints: 28,
+        minPointsSpecial: 26,
+        requiredSubjects: [
+            { code: 'EN', minPoints: 5, name: 'English Language' },
+            { code: 'MA', minPoints: 5, name: 'Mathematics' },
+            { code: 'BI', minPoints: 5, name: 'Biology' },
+            { code: 'PE', minPoints: 4, name: 'Physical Education' }
+        ],
+        note: 'At least two of PE, English, Math, Biology/Science required for special category pathway.'
     }
 };
 
-// Subjects List
-const subjectsList = [
-    "Literature in English", "Setswana", "Mathematics", "Science Single Award", 
-    "Science Double Award", "Chemistry", "Physics", "Biology", 
-    "Human & Social Biology", "History", "Geography", "Social Studies",
-    "Development Studies", "Religious Education", "English",
-    "Commerce", "Accounting", "Business Studies", "Computer Studies",
-    "Design & Technology", "Music", "Physical Education", "Hospitality & Tourism",
-    "Food & Nutrition", "Fashion & Fabrics", "Home Management",
-    "Animal Production", "Field Crop Production", "Horticulture", "Agriculture"
-];
-
+// ==================== STATE ====================
+let applications = [];
 let currentModalRef = null;
 let swiperInstance = null;
+let draftTimer = null;
 
-// Initialize Tailwind
-function initializeTailwind() {
-    // Tailwind is loaded via CDN
+// ==================== INITIALIZATION ====================
+function init() {
+    // Load applications from localStorage
+    loadApplications();
+    
+    // Populate subjects table
+    populateSubjectsTable();
+    
+    // Attach event listeners for live calculations
+    attachFormListeners();
+    
+    // Initialize dark mode icon (already handled in HTML)
+    updateDarkModeIcon(document.documentElement.classList.contains('dark'));
+    
+    // Init Swiper for programmes tab
+    initSwiper();
+    
+    // Populate programme cards grid
+    populateProgrammeCards();
+    
+    // Update app count badge
+    updateAppCount();
+    
+    // Restore draft if exists
+    restoreDraft();
+    
+    // Demo data for first-time users (comment out in production if needed)
+    initDemoDataIfNeeded();
+    
+    // Initial prereq placeholder
+    const prereqSection = document.getElementById('prerequisite-section');
+    if (prereqSection) {
+        prereqSection.innerHTML = '<div class="text-slate-500 italic text-sm">Select your programme choice(s) above and enter BGCSE results to see real-time prerequisite assessment.</div>';
+    }
+    
+    // Show welcome toast on first load
+    if (!localStorage.getItem('hasVisitedAdmissions')) {
+        setTimeout(() => {
+            showToast('Welcome to FCTVE Admissions Portal • 2026/2027', 'info');
+            localStorage.setItem('hasVisitedAdmissions', 'true');
+        }, 1200);
+    }
+    
+    console.log('%c[FCTVE Admissions] Portal initialized successfully', 'color:#64748b');
 }
 
-// Initialize Subjects Table
-function initializeSubjectsTable() {
+// Attach listeners for dynamic updates
+function attachFormListeners() {
+    const form = document.getElementById('admission-form');
+    if (!form) return;
+    
+    // Live points calculation on any grade input
+    form.addEventListener('input', (e) => {
+        if (e.target.classList.contains('grade-input') || e.target.id === 'sen-ovc' || 
+            e.target.id.startsWith('choice') || e.target.id === 'work-experience' || 
+            e.target.id === 'vocational-qualification') {
+            calculateAndUpdatePoints();
+            updatePrerequisiteFields();
+            autoSaveDraft();
+        }
+    });
+    
+    // DOB -> age hint (optional display)
+    const dobInput = document.getElementById('dob');
+    if (dobInput) {
+        dobInput.addEventListener('change', () => {
+            const age = calculateAge(dobInput.value);
+            if (age) {
+                dobInput.title = `Age: ${age} years`;
+            }
+        });
+    }
+    
+    // Identity validation
+    const idInput = document.getElementById('identity-number');
+    if (idInput) {
+        idInput.addEventListener('input', validateIdentityNumber);
+    }
+    
+    // Gender change re-validate ID
+    const genderSelect = document.getElementById('gender');
+    if (genderSelect) {
+        genderSelect.addEventListener('change', validateIdentityNumber);
+    }
+    
+    // Auto-save on key fields
+    const autoSaveFields = ['surname', 'first-name', 'receipt-number'];
+    autoSaveFields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => autoSaveDraft());
+    });
+}
+
+// Calculate age from DOB
+function calculateAge(dobStr) {
+    if (!dobStr) return null;
+    const birth = new Date(dobStr);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+    return age;
+}
+
+// ==================== SUBJECTS TABLE ====================
+function populateSubjectsTable() {
     const tbody = document.getElementById('subjects-table');
     if (!tbody) return;
     
     tbody.innerHTML = '';
     
-    for (let i = 0; i < subjectsList.length; i += 2) {
+    // Create two columns layout (left + right)
+    const half = Math.ceil(SUBJECTS.length / 2);
+    const leftSubjects = SUBJECTS.slice(0, half);
+    const rightSubjects = SUBJECTS.slice(half);
+    
+    for (let i = 0; i < Math.max(leftSubjects.length, rightSubjects.length); i++) {
         const row = document.createElement('tr');
-        row.className = 'subject-row';
+        row.className = 'hover:bg-slate-50 dark:hover:bg-slate-800/50';
         
-        let html = `
-            <td class="px-4 py-3 text-slate-700 font-medium">${subjectsList[i]}</td>
-            <td class="px-2 py-3">
-                <input type="text" maxlength="1" 
-                       class="grade-input border border-slate-300 rounded-xl px-2 py-1.5 text-center font-bold focus:border-blue-600"
-                       data-subject="${subjectsList[i]}" oninput="calculatePoints()">
-            </td>
-            <td class="px-2 py-3 text-center">
-                <span class="points-display font-extrabold text-blue-700" data-subject="${subjectsList[i]}">0</span>
-            </td>
-        `;
-        
-        if (subjectsList[i + 1]) {
-            html += `
-                <td class="px-4 py-3 text-slate-700 font-medium border-l">${subjectsList[i + 1]}</td>
-                <td class="px-2 py-3">
-                    <input type="text" maxlength="1" 
-                           class="grade-input border border-slate-300 rounded-xl px-2 py-1.5 text-center font-bold focus:border-blue-600"
-                           data-subject="${subjectsList[i + 1]}" oninput="calculatePoints()">
+        // Left subject
+        const left = leftSubjects[i];
+        let leftCell = '';
+        if (left) {
+            leftCell = `
+                <td class="py-2.5 px-4 text-sm font-medium text-slate-700 dark:text-slate-200">${left.name}</td>
+                <td class="py-2.5 px-2 text-center">
+                    <select class="grade-input form-input px-2 py-1.5 border border-slate-300 rounded-xl text-sm font-bold" 
+                            data-code="${left.code}" onchange="calculateAndUpdatePoints(); updatePrerequisiteFields()">
+                        <option value="">-</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                    </select>
                 </td>
-                <td class="px-2 py-3 text-center">
-                    <span class="points-display font-extrabold text-blue-700" data-subject="${subjectsList[i + 1]}">0</span>
+                <td class="py-2.5 px-2 text-center">
+                    <span class="points-display text-sm font-bold text-slate-500 tabular-nums" data-code="${left.code}">0</span>
                 </td>
             `;
         } else {
-            html += `<td class="px-4 py-3 border-l"></td><td></td><td></td>`;
+            leftCell = '<td colspan="3"></td>';
         }
         
-        row.innerHTML = html;
+        // Right subject
+        const right = rightSubjects[i];
+        let rightCell = '';
+        if (right) {
+            rightCell = `
+                <td class="py-2.5 px-4 text-sm font-medium text-slate-700 dark:text-slate-200 border-l border-slate-100 dark:border-slate-700">${right.name}</td>
+                <td class="py-2.5 px-2 text-center">
+                    <select class="grade-input form-input px-2 py-1.5 border border-slate-300 rounded-xl text-sm font-bold" 
+                            data-code="${right.code}" onchange="calculateAndUpdatePoints(); updatePrerequisiteFields()">
+                        <option value="">-</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="G">G</option>
+                    </select>
+                </td>
+                <td class="py-2.5 px-2 text-center">
+                    <span class="points-display text-sm font-bold text-slate-500 tabular-nums" data-code="${right.code}">0</span>
+                </td>
+            `;
+        } else {
+            rightCell = '<td colspan="3"></td>';
+        }
+        
+        row.innerHTML = leftCell + rightCell;
         tbody.appendChild(row);
     }
 }
 
-// Calculate Points
-function calculatePoints() {
-    const pointDisplays = document.querySelectorAll('.points-display');
-    const gradeInputs = document.querySelectorAll('.grade-input');
+// Calculate points from grades + update UI
+function calculateAndUpdatePoints() {
+    const selects = document.querySelectorAll('.grade-input');
+    let totalPoints = 0;
+    let subjectPoints = {};
     
-    pointDisplays.forEach(display => {
-        const subject = display.dataset.subject;
-        const input = document.querySelector(`.grade-input[data-subject="${subject}"]`);
-        const grade = input ? input.value.toUpperCase() : '';
-        const points = gradePoints[grade] || 0;
+    selects.forEach(sel => {
+        const code = sel.dataset.code;
+        const grade = sel.value.toUpperCase().trim();
+        const pts = GRADE_POINTS[grade] || 0;
+        subjectPoints[code] = pts;
+        totalPoints += pts;
         
-        display.textContent = points;
-        display.classList.toggle('text-emerald-600', points > 0);
-        display.classList.toggle('text-blue-700', points === 0);
-    });
-    
-    // Best 6 Calculation
-    let allPoints = [];
-    gradeInputs.forEach(input => {
-        const grade = input.value.toUpperCase();
-        if (gradePoints[grade] !== undefined) {
-            allPoints.push(gradePoints[grade]);
+        // Update the points display next to it
+        const display = document.querySelector(`.points-display[data-code="${code}"]`);
+        if (display) {
+            display.textContent = pts;
+            display.className = `points-display text-sm font-bold tabular-nums ${pts >= 6 ? 'text-emerald-600' : pts >= 4 ? 'text-blue-600' : 'text-slate-500'}`;
         }
     });
     
-    allPoints.sort((a, b) => b - a);
-    const bestSix = allPoints.slice(0, 6);
-    const bestSixTotal = bestSix.reduce((sum, p) => sum + p, 0);
+    // Best 6 calculation
+    const allPoints = Object.values(subjectPoints).sort((a, b) => b - a);
+    const bestSix = allPoints.slice(0, 6).reduce((sum, p) => sum + p, 0);
     
+    // Update UI
     const bestEl = document.getElementById('best-six-points');
     const totalEl = document.getElementById('total-points');
     
-    if (bestEl) bestEl.textContent = bestSixTotal;
-    if (totalEl) totalEl.textContent = bestSixTotal;
+    if (bestEl) bestEl.textContent = bestSix;
+    if (totalEl) totalEl.textContent = totalPoints;
     
-    // Update prerequisites if programme selected
-    const programme = document.getElementById('programme1')?.value;
-    if (programme) {
-        checkPrerequisites(programme);
-    }
+    // Store for later use
+    window.currentBestSix = bestSix;
+    window.currentTotalPoints = totalPoints;
+    window.currentSubjectPoints = subjectPoints;
+    
+    return { bestSix, totalPoints, subjectPoints };
 }
 
-// Update Prerequisite Section
-function updatePrerequisiteFields() {
-    const programme = document.getElementById('programme1')?.value;
-    const section = document.getElementById('prerequisite-section');
-    
-    if (!programme) {
-        section.innerHTML = `<div class="text-slate-500 italic">Select a programme above to view requirements.</div>`;
-        return;
-    }
-    
-    const req = programmeRequirements[programme];
-    if (!req) {
-        section.innerHTML = `<div class="text-amber-600">No specific data available for this programme.</div>`;
-        return;
-    }
-    
-    section.innerHTML = `
-        <div class="bg-blue-50 border border-blue-100 rounded-2xl p-5">
-            <div class="font-bold text-blue-800 mb-3 flex items-center gap-x-2">
-                <i class="fa-solid fa-info-circle"></i>
-                <span>${programme} Requirements</span>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-y-3 text-sm">
-                <div>
-                    <span class="font-semibold text-slate-700">Minimum Points:</span><br>
-                    <span class="text-2xl font-extrabold text-blue-900">${req.minPoints}</span>
-                    <span class="text-xs text-slate-500">(SEN/OVC: ${req.senMinPoints})</span>
-                </div>
-                <div>
-                    <span class="font-semibold text-slate-700">Required Subjects (Min Grade ${req.minGrade}):</span><br>
-                    <span class="font-bold text-emerald-700">${req.subjects.join(' + ')}</span>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    setTimeout(() => checkPrerequisites(programme), 200);
-}
-
-// Check Prerequisites
-function checkPrerequisites(programme) {
-    const req = programmeRequirements[programme];
-    if (!req) return;
-    
-    const bestSix = parseInt(document.getElementById('best-six-points').textContent) || 0;
-    const senStatus = document.getElementById('sen-ovc').value;
-    const isSEN = senStatus !== 'No';
-    const minPoints = isSEN ? req.senMinPoints : req.minPoints;
-    
-    const meetsPoints = bestSix >= minPoints;
-    
-    let meetsSubjects = true;
-    let subjectStatusHTML = '';
-    
-    req.subjects.forEach(subjectName => {
-        const inputs = document.querySelectorAll('.grade-input');
-        let foundGrade = null;
-        
-        const searchTerm = subjectName.toLowerCase();
-        
-        inputs.forEach(input => {
-            const subject = input.dataset.subject.toLowerCase();
-            
-            // More robust matching
-            if (subject === searchTerm || 
-                subject.includes(searchTerm) || 
-                searchTerm.includes(subject) ||
-                (searchTerm === 'english' && (subject.includes('english') || subject.includes('literature in english'))) ||
-                (searchTerm === 'literature in english' && (subject.includes('english') || subject.includes('literature')))) {
-                foundGrade = input.value.toUpperCase();
-            }
-        });
-        
-        const gradeValue = gradePoints[foundGrade] || 0;
-        const minGradeValue = gradePoints[req.minGrade] || 0;
-        const passed = gradeValue >= minGradeValue;
-        
-        if (!passed) meetsSubjects = false;
-        
-        subjectStatusHTML += `
-            <div class="flex items-center gap-x-2 text-xs">
-                <span class="${passed ? 'text-emerald-600' : 'text-red-600 font-bold'}">${subjectName}:</span> 
-                <span class="font-mono font-bold">${foundGrade || '—'}</span>
-                ${passed ? '<i class="fa-solid fa-check text-emerald-500"></i>' : '<i class="fa-solid fa-times text-red-500"></i>'}
-            </div>
-        `;
-    });
-    
-    const section = document.getElementById('prerequisite-section');
-    
-    if (meetsPoints && meetsSubjects) {
-        section.innerHTML = `
-            <div class="flex items-center gap-x-4 bg-emerald-100 border border-emerald-200 text-emerald-800 px-6 py-4 rounded-2xl">
-                <i class="fa-solid fa-check-circle text-3xl"></i>
-                <div>
-                    <div class="font-extrabold text-lg">Prerequisites Fully Met</div>
-                    <div class="text-xs">Applicant meets all requirements for this programme.</div>
-                </div>
-            </div>
-        `;
-    } else {
-        section.innerHTML = `
-            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-                <div class="flex items-center gap-x-2 text-amber-700 font-bold mb-3">
-                    <i class="fa-solid fa-exclamation-triangle"></i>
-                    <span>Prerequisites Not Fully Met</span>
-                </div>
-                <div class="pl-1 space-y-1 text-xs">
-                    ${!meetsPoints ? `<div>• Points: <span class="font-bold">${bestSix}</span> (minimum required: ${minPoints})</div>` : ''}
-                    ${subjectStatusHTML}
-                </div>
-            </div>
-        `;
-    }
-}
-
-// Validate Identity Number
+// ==================== IDENTITY VALIDATION ====================
 function validateIdentityNumber() {
     const idInput = document.getElementById('identity-number');
     const genderSelect = document.getElementById('gender');
@@ -298,553 +393,885 @@ function validateIdentityNumber() {
     
     if (!idInput || !errorEl) return true;
     
-    const id = idInput.value.trim();
-    const gender = genderSelect ? genderSelect.value : '';
-    
+    const val = idInput.value.trim().toUpperCase();
     errorEl.classList.add('hidden');
-    idInput.classList.remove('border-red-400', 'border-emerald-400');
+    idInput.classList.remove('border-red-500', 'focus:border-red-500');
     
-    if (!id) return true;
+    if (!val) return true;
     
-    if (!/^\d{9}$/.test(id)) {
-        errorEl.textContent = 'Identity Number must be exactly 9 digits.';
+    // Passport format (starts with letter) or 9-digit Omang
+    const isPassport = /^[A-Z][A-Z0-9]{5,10}$/.test(val);
+    const isOmang = /^\d{9}$/.test(val);
+    
+    if (!isPassport && !isOmang) {
+        errorEl.textContent = 'Must be 9-digit Omang or valid Passport number';
         errorEl.classList.remove('hidden');
-        idInput.classList.add('border-red-400');
+        idInput.classList.add('border-red-500');
         return false;
     }
     
-    if (gender) {
-        const fifthDigit = id.charAt(4);
-        const expected = (gender === 'Male') ? '1' : '2';
+    // Gender cross-check for Omang (common convention: 5th digit odd=Male, even=Female or similar)
+    if (isOmang && genderSelect && genderSelect.value) {
+        const fifthDigit = parseInt(val[4], 10);
+        const isMaleById = fifthDigit % 2 === 1; // typical pattern in some national IDs
+        const selectedGender = genderSelect.value;
         
-        if (fifthDigit !== expected) {
-            errorEl.textContent = `For ${gender}, the 5th digit must be ${expected}.`;
+        if ((selectedGender === 'Male' && !isMaleById) || (selectedGender === 'Female' && isMaleById)) {
+            errorEl.textContent = `Gender mismatch: 5th digit suggests ${isMaleById ? 'Male' : 'Female'}`;
             errorEl.classList.remove('hidden');
-            idInput.classList.add('border-red-400');
+            idInput.classList.add('border-red-500');
             return false;
         }
     }
     
-    idInput.classList.add('border-emerald-400');
     return true;
 }
 
-// Submit Application
+// ==================== CHOICES VALIDATION (no duplicates) ====================
+function validateChoices() {
+    const c1 = document.getElementById('choice1')?.value;
+    const c2 = document.getElementById('choice2')?.value;
+    const c3 = document.getElementById('choice3')?.value;
+    const errorEl = document.getElementById('choices-error');
+    
+    if (!errorEl) return true;
+    
+    errorEl.classList.add('hidden');
+    const selected = [c1, c2, c3].filter(Boolean);
+    const unique = new Set(selected);
+    
+    if (unique.size !== selected.length) {
+        errorEl.textContent = 'Duplicate programme choices are not allowed. Please select different programmes.';
+        errorEl.classList.remove('hidden');
+        return false;
+    }
+    return true;
+}
+
+// ==================== PREREQUISITE / ELIGIBILITY CHECK ====================
+function updatePrerequisiteFields() {
+    const section = document.getElementById('prerequisite-section');
+    if (!section) return;
+    
+    const c1 = document.getElementById('choice1')?.value;
+    const c2 = document.getElementById('choice2')?.value;
+    const c3 = document.getElementById('choice3')?.value;
+    
+    const choices = [
+        { rank: 1, value: c1 },
+        { rank: 2, value: c2 },
+        { rank: 3, value: c3 }
+    ].filter(c => c.value);
+    
+    if (choices.length === 0) {
+        section.innerHTML = '<div class="text-slate-500 italic text-sm">Select your programme choice(s) above and enter BGCSE results to see real-time prerequisite assessment.</div>';
+        return;
+    }
+    
+    // Get current form data
+    const formData = getFormDataForValidation();
+    
+    let html = '<div class="space-y-4">';
+    
+    choices.forEach(({ rank, value }) => {
+        const result = checkEligibility(value, formData);
+        const cardClass = result.eligible ? 'eligible' : (result.meetsPoints && result.meetsSubjects === false ? 'partial' : 'not-eligible');
+        const icon = result.eligible ? 'fa-check-circle text-emerald-600' : (result.meetsPoints ? 'fa-exclamation-triangle text-amber-500' : 'fa-times-circle text-red-600');
+        
+        html += `
+            <div class="prereq-card ${cardClass} bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+                <div class="flex items-start justify-between mb-3">
+                    <div>
+                        <div class="flex items-center gap-x-2">
+                            <span class="px-2.5 py-0.5 text-[10px] font-bold rounded-full ${rank === 1 ? 'bg-blue-800 text-white' : 'bg-slate-500 text-white'}">${rank}${rank === 1 ? 'st' : rank === 2 ? 'nd' : 'rd'} CHOICE</span>
+                            <span class="font-bold text-lg text-slate-900 dark:text-white">${PROGRAMME_REQUIREMENTS[value]?.label || value}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <i class="fa-solid ${icon} text-2xl"></i>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+                    <div class="flex items-center gap-x-2">
+                        <span class="font-semibold text-slate-600 dark:text-slate-400 w-24">Points:</span>
+                        <span class="font-bold tabular-nums ${result.meetsPoints ? 'text-emerald-600' : 'text-red-600'}">${formData.bestSix} / ${result.threshold}</span>
+                        ${result.meetsPoints ? '<i class="fa-solid fa-check text-emerald-500 ml-1"></i>' : '<i class="fa-solid fa-times text-red-500 ml-1"></i>'}
+                    </div>
+                    
+                    <div class="flex items-center gap-x-2">
+                        <span class="font-semibold text-slate-600 dark:text-slate-400 w-24">Category:</span>
+                        <span class="font-medium">${formData.isSpecial ? formData.senOvc + ' (Special)' : 'Standard'}</span>
+                    </div>
+                </div>
+                
+                ${result.subjectIssues && result.subjectIssues.length > 0 ? `
+                    <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700">
+                        <div class="text-xs font-semibold text-amber-600 dark:text-amber-400 mb-1">SUBJECT REQUIREMENTS:</div>
+                        <ul class="text-xs text-slate-600 dark:text-slate-300 space-y-0.5">
+                            ${result.subjectIssues.map(issue => `<li class="flex items-start gap-x-1.5"><i class="fa-solid fa-info-circle mt-0.5 text-amber-500"></i> ${issue}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                ${result.meetsAlt ? `
+                    <div class="mt-2 text-xs bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300 px-3 py-1 rounded-xl inline-flex items-center gap-x-1">
+                        <i class="fa-solid fa-check-double"></i> <span>Meets alternative pathway (vocational/work exp)</span>
+                    </div>
+                ` : ''}
+                
+                <div class="mt-3 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                    <div class="text-sm font-bold ${result.eligible ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}">
+                        ${result.status}
+                    </div>
+                    ${result.note ? `<div class="text-[10px] text-slate-500 max-w-[220px] text-right">${result.note}</div>` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    section.innerHTML = html;
+}
+
+function getFormDataForValidation() {
+    const bestSix = window.currentBestSix || 0;
+    const senOvc = document.getElementById('sen-ovc')?.value || 'No';
+    const isSpecial = ['SEN', 'OVC', 'RAD'].includes(senOvc);
+    const workMonths = parseInt(document.getElementById('work-experience')?.value) || 0;
+    const vocational = document.getElementById('vocational-qualification')?.value?.trim() || '';
+    
+    return {
+        bestSix,
+        isSpecial,
+        senOvc,
+        workMonths,
+        hasVocational: !!vocational,
+        vocationalName: vocational,
+        subjectPoints: window.currentSubjectPoints || {}
+    };
+}
+
+function checkEligibility(progValue, formData) {
+    const req = PROGRAMME_REQUIREMENTS[progValue];
+    if (!req) {
+        return { eligible: false, status: 'Unknown Programme', meetsPoints: false, meetsSubjects: false, subjectIssues: [], threshold: 0 };
+    }
+    
+    const threshold = formData.isSpecial && req.minPointsSpecial ? req.minPointsSpecial : req.minPoints;
+    const meetsPoints = formData.bestSix >= threshold;
+    
+    let meetsSubjects = true;
+    let subjectIssues = [];
+    
+    if (req.requiredSubjects && req.requiredSubjects.length > 0) {
+        for (const r of req.requiredSubjects) {
+            const pts = formData.subjectPoints[r.code] || 0;
+            if (pts < r.minPoints) {
+                meetsSubjects = false;
+                const neededGrade = Object.keys(GRADE_POINTS).find(g => GRADE_POINTS[g] === r.minPoints) || 'D';
+                const hasGrade = Object.keys(GRADE_POINTS).find(g => GRADE_POINTS[g] === pts) || '-';
+                subjectIssues.push(`${r.name} needs ${neededGrade} or better (current: ${hasGrade})`);
+            }
+        }
+    }
+    
+    // Alternative pathway check (simplified)
+    let meetsAlt = false;
+    if (req.altPathway && formData.hasVocational) {
+        meetsAlt = true;
+    }
+    if (['Travel Management', 'Culinary Arts', 'Hospitality Management', 'Textile Design'].includes(progValue) && formData.workMonths >= 24) {
+        meetsAlt = true;
+    }
+    
+    // Special logic for CVET
+    let eligible = false;
+    if (progValue === 'CVET') {
+        eligible = formData.hasVocational || (formData.bestSix >= 20); // loose for demo
+    } else {
+        eligible = meetsPoints && (meetsSubjects || meetsAlt);
+    }
+    
+    let status = 'Not Qualified';
+    if (eligible) {
+        status = formData.isSpecial ? 'Qualified (Special Category Advantage)' : 'Qualified';
+    } else if (meetsPoints && !meetsSubjects && !meetsAlt) {
+        status = 'Review Recommended (points met, subjects pending)';
+    }
+    
+    return {
+        eligible,
+        status,
+        meetsPoints,
+        meetsSubjects,
+        meetsAlt,
+        subjectIssues,
+        threshold,
+        note: req.note || (req.addedAdvantage ? 'Added advantage subjects: ' + req.addedAdvantage.join(', ') : '')
+    };
+}
+
+// ==================== FORM SUBMISSION ====================
 function submitApplication(e) {
     e.preventDefault();
     
-    try {
-        // === Required Field Validation ===
-    const requiredFields = [
-        { id: 'surname', label: 'Surname' },
-        { id: 'first-name', label: 'First Name' },
-        { id: 'dob', label: 'Date of Birth' },
-        { id: 'gender', label: 'Gender' },
-        { id: 'identity-number', label: 'Identity Number / Passport' },
-        { id: 'nationality', label: 'Nationality' }
-    ];
-    
-    for (let field of requiredFields) {
-        const element = document.getElementById(field.id);
-        if (!element || !element.value.trim()) {
-            alert(`Please fill in the required field: ${field.label}`);
-            element?.focus();
-            return;
-        }
-    }
-    
-    if (!validateIdentityNumber()) {
-        alert("Please correct the Identity Number before submitting.");
+    if (!validateChoices()) {
+        showToast('Please fix duplicate programme choices', 'error');
         return;
     }
     
-    const programme1 = document.getElementById('programme1').value;
-    const programme2 = document.getElementById('programme2').value;
-    const programme3 = document.getElementById('programme3').value;
-
-    if (!programme1) {
-        alert("Please select at least your First Choice programme.");
-        return;
-    }
-
-    // Prevent selecting the same programme more than once
-    const selectedProgrammes = [programme1, programme2, programme3].filter(p => p);
-    if (new Set(selectedProgrammes).size !== selectedProgrammes.length) {
-        alert("You cannot select the same programme more than once across your choices.");
+    const idValid = validateIdentityNumber();
+    if (!idValid) {
+        showToast('Please fix Identity Number / Gender mismatch', 'error');
         return;
     }
     
-    const application = {
+    const formData = gatherFullFormData();
+    if (!formData.surname || !formData.firstName || !formData.choice1) {
+        showToast('Please complete all required fields (Surname, First Name, 1st Choice)', 'error');
+        return;
+    }
+    
+    // Compute eligibility for primary choice
+    const primaryCheck = checkEligibility(formData.choice1, {
+        bestSix: formData.bestSix,
+        isSpecial: formData.isSpecial,
+        senOvc: formData.senOvc,
+        workMonths: formData.workExpMonths,
+        hasVocational: !!formData.vocationalQualification,
+        subjectPoints: formData.grades
+    });
+    
+    // Build application object
+    const app = {
         id: Date.now(),
-        ref: 'REC-' + Date.now().toString().slice(-6),
-        date: new Date().toISOString(),
-        programme1: programme1,
-        programme2: programme2 || null,
-        programme3: programme3 || null,
-        surname: document.getElementById('surname').value,
-        firstName: document.getElementById('first-name').value,
-        otherNames: document.getElementById('other-names').value || '',
-        dob: document.getElementById('dob').value,
-        gender: document.getElementById('gender').value,
-        identityNumber: document.getElementById('identity-number').value,
-        senOvc: document.getElementById('sen-ovc').value,
-        workExperience: parseInt(document.getElementById('work-experience').value) || 0,
-        bestSixPoints: parseInt(document.getElementById('best-six-points').textContent) || 0,
-        
-        // New fields added
-        receiptNumber: document.getElementById('receipt-number').value,
-        kinName: document.getElementById('kin-name')?.value || '',
-        kinRelationship: document.getElementById('kin-relationship')?.value || '',
-        kinPhone: document.getElementById('kin-phone')?.value || '',
-        kinEmail: document.getElementById('kin-email')?.value || '',
-        vocationalQualification: document.getElementById('vocational-qualification')?.value || '',
-        otherQualifications: document.getElementById('other-qualifications')?.value || '',
-        
-        status: 'Pending Review'
+        ref: 'APP-' + new Date().getFullYear() + '-' + String(applications.length + 101).padStart(4, '0'),
+        submittedAt: new Date().toISOString(),
+        personal: {
+            surname: formData.surname,
+            firstName: formData.firstName,
+            otherNames: formData.otherNames,
+            dob: formData.dob,
+            gender: formData.gender,
+            identityNumber: formData.identityNumber,
+            nationality: formData.nationality
+        },
+        nextOfKin: {
+            name: formData.kinName,
+            relationship: formData.kinRelationship,
+            phone: formData.kinPhone,
+            email: formData.kinEmail
+        },
+        choices: [
+            { rank: 1, programme: formData.choice1, eligibility: checkEligibility(formData.choice1, {bestSix: formData.bestSix, isSpecial: formData.isSpecial, senOvc: formData.senOvc, workMonths: formData.workExpMonths, hasVocational: !!formData.vocationalQualification, subjectPoints: formData.grades}) },
+            formData.choice2 ? { rank: 2, programme: formData.choice2, eligibility: checkEligibility(formData.choice2, {bestSix: formData.bestSix, isSpecial: formData.isSpecial, senOvc: formData.senOvc, workMonths: formData.workExpMonths, hasVocational: !!formData.vocationalQualification, subjectPoints: formData.grades}) } : null,
+            formData.choice3 ? { rank: 3, programme: formData.choice3, eligibility: checkEligibility(formData.choice3, {bestSix: formData.bestSix, isSpecial: formData.isSpecial, senOvc: formData.senOvc, workMonths: formData.workExpMonths, hasVocational: !!formData.vocationalQualification, subjectPoints: formData.grades}) } : null
+        ].filter(Boolean),
+        education: {
+            grades: formData.grades,
+            bestSixPoints: formData.bestSix,
+            totalPoints: formData.totalPoints
+        },
+        specialCategory: formData.senOvc,
+        workExperienceMonths: formData.workExpMonths,
+        vocationalQualification: formData.vocationalQualification ? {
+            name: formData.vocationalQualification,
+            institution: formData.vocationalInstitution,
+            year: formData.vocationalYear,
+            durationMonths: formData.vocationalDuration
+        } : null,
+        otherQualifications: formData.otherQualifications,
+        documents: formData.documents,
+        receiptNumber: formData.receiptNumber,
+        overallStatus: primaryCheck.status,
+        primaryProgramme: formData.choice1
     };
     
-    // Determine which programme the student is enrolled in (based on choices + criteria)
-    let enrolledProgramme = null;
-    let finalStatus = 'Pending Review';
-
-    const choices = [programme1, programme2, programme3].filter(Boolean);
-    const isSEN = application.senOvc !== 'No';
-
-    for (let choice of choices) {
-        const req = programmeRequirements[choice];
-        if (!req) continue;
-
-        const minPoints = isSEN ? req.senMinPoints : req.minPoints;
-        const meetsPoints = application.bestSixPoints >= minPoints;
-
-        if (meetsPoints) {
-            enrolledProgramme = choice;
-            finalStatus = 'Qualified';
-            break;
-        }
-    }
-
-    if (!enrolledProgramme) {
-        enrolledProgramme = programme1;
-        finalStatus = 'Not Qualified';
-    }
-
-    application.enrolledProgramme = enrolledProgramme;
-    application.status = finalStatus;
-    
     // Save
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-    applications.unshift(application);
-    localStorage.setItem('admissions', JSON.stringify(applications));
+    applications.unshift(app);
+    localStorage.setItem('fctveApplications', JSON.stringify(applications));
     
-    // Success UI
-    const btn = e.target.querySelector('button[type="submit"]');
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = `<i class="fa-solid fa-check"></i> <span>SUBMITTED!</span>`;
-    btn.disabled = true;
+    // Update UI
+    updateAppCount();
+    renderApplicationsTable();
     
+    // Success feedback
+    showToast(`Application ${app.ref} submitted successfully!`, 'success');
+    
+    // Clear form + draft
+    document.getElementById('admission-form').reset();
+    localStorage.removeItem('admissionsDraft');
+    window.currentBestSix = 0;
+    window.currentSubjectPoints = {};
+    
+    // Reset points display
+    document.querySelectorAll('.points-display').forEach(el => el.textContent = '0');
+    document.getElementById('best-six-points').textContent = '0';
+    document.getElementById('total-points').textContent = '0';
+    
+    // Refresh prereq section
+    document.getElementById('prerequisite-section').innerHTML = '<div class="text-emerald-600 italic">Application submitted. You can submit another or view in All Applications tab.</div>';
+    
+    // Switch to All Applications tab after short delay
     setTimeout(() => {
-        alert(`Application ${application.ref} submitted successfully!`);
-        resetForm();
-        updateAppCount();
         showTab('all-applications');
-        renderApplicationsTable();
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
     }, 900);
 }
 
-// Reset Form
-function resetForm() {
-    const form = document.getElementById('admission-form');
-    if (form) form.reset();
+// Gather all form values
+function gatherFullFormData() {
+    const getVal = id => document.getElementById(id)?.value?.trim() || '';
+    const getChecked = id => document.getElementById(id)?.checked || false;
     
-    const bestEl = document.getElementById('best-six-points');
-    const totalEl = document.getElementById('total-points');
-    if (bestEl) bestEl.textContent = '0';
-    if (totalEl) totalEl.textContent = '0';
+    const { bestSix, totalPoints, subjectPoints } = calculateAndUpdatePoints();
     
-    document.querySelectorAll('.grade-input').forEach(i => i.value = '');
-    document.querySelectorAll('.points-display').forEach(el => el.textContent = '0');
-    
-    const prereq = document.getElementById('prerequisite-section');
-    if (prereq) prereq.innerHTML = `<div class="text-slate-500 italic">Select a programme above to view requirements.</div>`;
-    
-    const receipt = document.getElementById('receipt-number');
-    if (receipt) receipt.value = 'REC-2026-' + Date.now().toString().slice(-5);
+    return {
+        choice1: getVal('choice1'),
+        choice2: getVal('choice2'),
+        choice3: getVal('choice3'),
+        receiptNumber: getVal('receipt-number'),
+        surname: getVal('surname'),
+        firstName: getVal('first-name'),
+        otherNames: getVal('other-names'),
+        dob: getVal('dob'),
+        gender: getVal('gender'),
+        identityNumber: getVal('identity-number'),
+        nationality: getVal('nationality'),
+        kinName: getVal('kin-name'),
+        kinRelationship: getVal('kin-relationship'),
+        kinPhone: getVal('kin-phone'),
+        kinEmail: getVal('kin-email'),
+        senOvc: getVal('sen-ovc'),
+        isSpecial: ['SEN','OVC','RAD'].includes(getVal('sen-ovc')),
+        workExpMonths: parseInt(getVal('work-experience')) || 0,
+        vocationalQualification: getVal('vocational-qualification'),
+        vocationalInstitution: getVal('vocational-institution'),
+        vocationalYear: getVal('vocational-year'),
+        vocationalDuration: getVal('vocational-duration'),
+        otherQualifications: getVal('other-qualifications'),
+        documents: {
+            id: getChecked('doc-id'),
+            bgcse: getChecked('doc-bgcse'),
+            kin: getChecked('doc-kin'),
+            vocational: getChecked('doc-vocational'),
+            sponsor: getChecked('doc-sponsor'),
+            medical: getChecked('doc-medical')
+        },
+        grades: subjectPoints,
+        bestSix,
+        totalPoints
+    };
 }
 
-// Render Applications Table
-function renderApplicationsTable() {
+// ==================== APPLICATIONS STORAGE & RENDER ====================
+function loadApplications() {
+    const saved = localStorage.getItem('fctveApplications');
+    applications = saved ? JSON.parse(saved) : [];
+}
+
+function saveApplications() {
+    localStorage.setItem('fctveApplications', JSON.stringify(applications));
+}
+
+function updateAppCount() {
+    const badge = document.getElementById('app-count');
+    if (badge) badge.textContent = applications.length;
+}
+
+function renderApplicationsTable(filteredApps = null) {
     const tbody = document.getElementById('applications-table-body');
     const noApps = document.getElementById('no-applications');
     if (!tbody) return;
     
-    tbody.innerHTML = '';
+    const list = filteredApps || applications;
     
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-    
-    if (applications.length === 0) {
+    if (list.length === 0) {
+        tbody.innerHTML = '';
         if (noApps) noApps.classList.remove('hidden');
         return;
-    } else {
-        if (noApps) noApps.classList.add('hidden');
     }
     
-    applications.forEach(app => {
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-50 cursor-pointer transition-colors';
-        
-        const statusClass = (app.enrolmentStatus || app.status) === 'Qualified' ? 'status-qualified' : 'status-not-qualified';
-        
-        // Show enrolled programme or first choice
-        const enrolled = app.enrolledProgramme || app.programme1 || app.programme || 'N/A';
-        
-        row.innerHTML = `
-            <td class="px-6 py-4 font-mono text-xs text-slate-500">${app.ref}</td>
-            <td class="px-6 py-4">
-                <div class="font-semibold">${app.surname}, ${app.firstName}</div>
-                <div class="text-xs text-slate-500">${app.gender} • ${app.identityNumber}</div>
-            </td>
-            <td class="px-6 py-4">
-                <div class="text-sm font-semibold text-blue-700">${enrolled}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">
-                    ${app.programme2 ? '2nd: ' + app.programme2 : ''}
-                    ${app.programme3 ? (app.programme2 ? ' • ' : '') + '3rd: ' + app.programme3 : ''}
-                </div>
-            </td>
-            <td class="px-6 py-4 text-center">
-                <span class="font-extrabold text-2xl tabular-nums text-slate-800">${app.bestSixPoints}</span>
-            </td>
-            <td class="px-6 py-4 text-center">
-                <span class="${statusClass}">${app.enrolmentStatus || app.status}</span>
-            </td>
-            <td class="px-6 py-4 text-center text-xs text-slate-500">
-                ${new Date(app.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-            </td>
-            <td class="px-6 py-4 text-center">
-                <button onclick="viewApplication(${app.id}); event.stopImmediatePropagation();" 
-                        class="text-blue-600 hover:text-blue-800 p-2 transition-colors">
-                    <i class="fa-solid fa-eye text-lg"></i>
-                </button>
-            </td>
-        `;
-        
-        row.onclick = () => viewApplication(app.id);
-        tbody.appendChild(row);
-    });
+    if (noApps) noApps.classList.add('hidden');
     
-    const countEl = document.getElementById('app-count');
-    if (countEl) countEl.textContent = applications.length;
+    tbody.innerHTML = list.map(app => {
+        const statusClass = app.overallStatus.includes('Qualified') ? 'status-qualified' : 
+                           app.overallStatus.includes('Review') ? 'status-review' : 'status-not-qualified';
+        
+        const primary = app.choices?.[0]?.programme || app.primaryProgramme || 'N/A';
+        
+        return `
+            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/60 cursor-pointer" onclick="showApplicationDetail('${app.ref}')">
+                <td class="px-6 py-4 font-mono text-xs text-slate-500">${app.ref}</td>
+                <td class="px-6 py-4">
+                    <div class="font-semibold">${app.personal.surname}, ${app.personal.firstName}</div>
+                    <div class="text-xs text-slate-500">${app.personal.identityNumber || ''}</div>
+                </td>
+                <td class="px-6 py-4 text-sm">${primary}</td>
+                <td class="px-6 py-4 text-center">
+                    <span class="font-bold tabular-nums text-lg">${app.education?.bestSixPoints || 0}</span>
+                    <span class="text-xs text-slate-500 block -mt-1">pts</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <span class="status-badge ${statusClass}">${app.overallStatus}</span>
+                </td>
+                <td class="px-6 py-4 text-center text-xs text-slate-500">
+                    ${new Date(app.submittedAt).toLocaleDateString('en-GB', {day:'2-digit', month:'short'})}
+                </td>
+                <td class="px-6 py-4 text-center">
+                    <button onclick="event.stopImmediatePropagation(); showApplicationDetail('${app.ref}');" 
+                            class="px-3 py-1 text-xs font-semibold bg-white border border-slate-300 hover:bg-blue-50 rounded-xl transition-colors">
+                        <i class="fa-solid fa-eye mr-1"></i> View
+                    </button>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
-// View Application Modal
-function viewApplication(id) {
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-    const app = applications.find(a => a.id === id);
+function showApplicationDetail(ref) {
+    const app = applications.find(a => a.ref === ref);
     if (!app) return;
     
-    currentModalRef = id;
+    currentModalRef = ref;
     
-    document.getElementById('modal-ref').textContent = app.ref;
-    document.getElementById('modal-name').textContent = `${app.surname}, ${app.firstName} ${app.otherNames || ''}`;
-    
-    const statusEl = document.getElementById('modal-status-badge');
-    statusEl.innerHTML = `<span class="${app.status === 'Qualified' ? 'status-qualified' : 'status-not-qualified'} px-5 py-1 text-sm">${app.status}</span>`;
-    
+    const modal = document.getElementById('detail-modal');
     const content = document.getElementById('modal-content');
-    content.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 text-sm">
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Programme</div>
-                <div class="font-extrabold text-xl">${app.programme}</div>
-            </div>
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Submitted</div>
-                <div class="font-semibold">${new Date(app.date).toLocaleString()}</div>
-            </div>
-            
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Gender &amp; ID Number</div>
-                <div class="font-semibold">${app.gender} &nbsp; <span class="font-mono">${app.identityNumber}</span></div>
-            </div>
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Date of Birth</div>
-                <div class="font-semibold">${app.dob}</div>
-            </div>
-            
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Special Category</div>
-                <div class="font-semibold">${app.senOvc}</div>
-            </div>
-            <div>
-                <div class="text-xs uppercase tracking-[1px] text-slate-500 mb-1">Work Experience</div>
-                <div class="font-semibold">${app.workExperience} months</div>
-            </div>
-            
-            <div class="col-span-2 pt-5 border-t mt-2">
-                <div class="flex items-end gap-x-4">
-                    <div>
-                        <div class="text-xs uppercase tracking-[1px] text-slate-500">Best 6 Points</div>
-                        <div class="text-7xl font-black text-blue-800 tabular-nums leading-none">${app.bestSixPoints}</div>
-                    </div>
-                    <div class="text-sm pb-3 text-slate-500">/ 48 max</div>
+    const nameEl = document.getElementById('modal-name');
+    const refEl = document.getElementById('modal-ref');
+    const statusEl = document.getElementById('modal-status-badge');
+    
+    if (!modal || !content) return;
+    
+    refEl.textContent = app.ref;
+    nameEl.textContent = `${app.personal.surname}, ${app.personal.firstName} ${app.personal.otherNames || ''}`;
+    
+    const statusClass = app.overallStatus.includes('Qualified') ? 'status-qualified' : 
+                       app.overallStatus.includes('Review') ? 'status-review' : 'status-not-qualified';
+    statusEl.innerHTML = `<span class="status-badge ${statusClass} px-4 py-1 text-sm">${app.overallStatus}</span>`;
+    
+    let html = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+            <!-- Personal -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-5">
+                <div class="font-bold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-x-2"><i class="fa-solid fa-user text-blue-600"></i> Personal Details</div>
+                <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+                    <div><span class="font-medium w-28 inline-block">Full Name:</span> ${app.personal.surname}, ${app.personal.firstName} ${app.personal.otherNames || ''}</div>
+                    <div><span class="font-medium w-28 inline-block">DOB / Age:</span> ${app.personal.dob || 'N/A'} ${app.personal.dob ? '(' + calculateAge(app.personal.dob) + ' yrs)' : ''}</div>
+                    <div><span class="font-medium w-28 inline-block">Gender:</span> ${app.personal.gender || 'N/A'}</div>
+                    <div><span class="font-medium w-28 inline-block">ID / Passport:</span> <span class="font-mono">${app.personal.identityNumber}</span></div>
+                    <div><span class="font-medium w-28 inline-block">Nationality:</span> ${app.personal.nationality}</div>
                 </div>
+            </div>
+            
+            <!-- Next of Kin -->
+            <div class="bg-slate-50 dark:bg-slate-800/60 rounded-2xl p-5">
+                <div class="font-bold text-slate-700 dark:text-slate-200 mb-3 flex items-center gap-x-2"><i class="fa-solid fa-users text-blue-600"></i> Next of Kin</div>
+                <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+                    <div><span class="font-medium w-28 inline-block">Name:</span> ${app.nextOfKin?.name || 'Not provided'}</div>
+                    <div><span class="font-medium w-28 inline-block">Relationship:</span> ${app.nextOfKin?.relationship || '-'}</div>
+                    <div><span class="font-medium w-28 inline-block">Phone:</span> ${app.nextOfKin?.phone || '-'}</div>
+                    <div><span class="font-medium w-28 inline-block">Email:</span> ${app.nextOfKin?.email || '-'}</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Choices & Status -->
+        <div class="mt-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-5">
+            <div class="font-bold text-slate-700 dark:text-slate-200 mb-3">Programme Choices & Assessment</div>
+            <div class="space-y-3">
+    `;
+    
+    app.choices.forEach((ch, idx) => {
+        const el = ch.eligibility || {};
+        const badge = el.eligible ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700';
+        html += `
+            <div class="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-700/50 rounded-xl">
+                <div class="flex items-center gap-x-3">
+                    <span class="font-mono text-xs px-2 py-0.5 bg-slate-200 dark:bg-slate-600 rounded">${ch.rank}${ch.rank===1?'st':ch.rank===2?'nd':'rd'}</span>
+                    <span class="font-semibold">${ch.programme}</span>
+                </div>
+                <div class="flex items-center gap-x-3">
+                    <span class="text-xs px-3 py-1 rounded-full font-bold ${badge}">${el.status || (el.eligible ? 'Qualified' : 'Not Qualified')}</span>
+                    <span class="text-xs text-slate-500">Points: <span class="font-bold text-slate-700 dark:text-white">${app.education.bestSixPoints}</span></span>
+                </div>
+            </div>
+        `;
+    });
+    
+    html += `</div></div>`;
+    
+    // Education summary
+    html += `
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
+                <div class="text-xs text-slate-500">BEST 6 POINTS</div>
+                <div class="text-4xl font-extrabold text-blue-700 dark:text-blue-400 tabular-nums">${app.education?.bestSixPoints || 0}</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4 text-center">
+                <div class="text-xs text-slate-500">TOTAL POINTS (ALL)</div>
+                <div class="text-4xl font-extrabold text-slate-700 dark:text-slate-300 tabular-nums">${app.education?.totalPoints || 0}</div>
+            </div>
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-4">
+                <div class="text-xs text-slate-500 mb-1">SPECIAL CATEGORY</div>
+                <div class="font-bold">${app.specialCategory || 'None'}</div>
+                <div class="text-xs mt-2 text-slate-500">Work Exp: ${app.workExperienceMonths || 0} months</div>
             </div>
         </div>
     `;
     
-    document.getElementById('detail-modal').classList.remove('hidden');
-    document.getElementById('detail-modal').classList.add('flex');
+    // Documents & other
+    if (app.documents) {
+        html += `<div class="mt-6 text-xs text-slate-500">Documents confirmed: ${Object.keys(app.documents).filter(k => app.documents[k]).map(k => k.toUpperCase()).join(', ') || 'None checked'}</div>`;
+    }
+    
+    content.innerHTML = html;
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
 }
 
-// Hide Modal
 function hideModal() {
     const modal = document.getElementById('detail-modal');
-    modal.classList.remove('flex');
-    modal.classList.add('hidden');
+    if (modal) {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+    }
+    currentModalRef = null;
 }
 
-// Delete Current Application
 function deleteCurrentApplication() {
-    if (!currentModalRef || !confirm('Delete this application permanently?')) return;
+    if (!currentModalRef) return;
+    if (!confirm('Delete this application permanently?')) return;
     
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-    applications = applications.filter(a => a.id !== currentModalRef);
-    localStorage.setItem('admissions', JSON.stringify(applications));
-    
-    hideModal();
-    renderApplicationsTable();
+    applications = applications.filter(a => a.ref !== currentModalRef);
+    saveApplications();
     updateAppCount();
+    renderApplicationsTable();
+    hideModal();
+    showToast('Application deleted', 'info');
 }
 
-// Export to CSV
+// ==================== EXPORT & CLEAR ====================
 function exportToCSV() {
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
     if (applications.length === 0) {
-        alert("No applications to export.");
+        showToast('No applications to export', 'info');
         return;
     }
     
-    let csv = 'Reference,Date,Programme,Surname,First Name,Gender,Identity Number,Points,Status,SEN/OVC,Work Experience\n';
+    const headers = ['Reference', 'Surname', 'First Name', 'Primary Programme', 'Best 6 Points', 'Status', 'Submitted', 'Special Category', 'Work Exp (months)'];
     
-    applications.forEach(app => {
-        csv += `"${app.ref}","${app.date}","${app.programme}","${app.surname}","${app.firstName}","${app.gender}","${app.identityNumber}",${app.bestSixPoints},"${app.status}","${app.senOvc}",${app.workExperience}\n`;
+    const rows = applications.map(app => [
+        app.ref,
+        app.personal.surname,
+        app.personal.firstName,
+        app.primaryProgramme || (app.choices?.[0]?.programme || ''),
+        app.education?.bestSixPoints || 0,
+        app.overallStatus,
+        new Date(app.submittedAt).toLocaleDateString('en-GB'),
+        app.specialCategory || '',
+        app.workExperienceMonths || 0
+    ]);
+    
+    let csv = headers.join(',') + '\n';
+    rows.forEach(row => {
+        csv += row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',') + '\n';
     });
     
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `DTTTE_Admissions_${new Date().toISOString().slice(0,10)}.csv`;
-    a.click();
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `FCTVE_Admissions_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
     URL.revokeObjectURL(url);
+    
+    showToast('CSV exported successfully', 'success');
 }
 
-// Clear All Applications
 function clearAllApplications() {
-    if (!confirm('This will permanently delete ALL applications. Are you sure?')) return;
-    localStorage.removeItem('admissions');
+    if (applications.length === 0) return;
+    if (!confirm('This will permanently delete ALL applications. Continue?')) return;
+    
+    applications = [];
+    localStorage.removeItem('fctveApplications');
+    updateAppCount();
     renderApplicationsTable();
-    updateAppCount();
+    showToast('All applications cleared', 'info');
 }
 
-// Update App Count
-function updateAppCount() {
-    let applications = JSON.parse(localStorage.getItem('admissions') || '[]');
-    const countEl = document.getElementById('app-count');
-    if (countEl) countEl.textContent = applications.length;
-}
-
-// Show Tab
-function showTab(tab) {
+// ==================== TABS ====================
+function showTab(tabId) {
+    // Hide all
     document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-    document.getElementById(tab).classList.remove('hidden');
     
-    document.querySelectorAll('.nav-tab').forEach(el => {
-        el.classList.remove('active', 'bg-blue-800', 'text-white');
-        el.classList.add('text-slate-600');
-    });
+    // Show target
+    const target = document.getElementById(tabId);
+    if (target) target.classList.remove('hidden');
     
-    const activeTab = document.getElementById('tab-' + tab);
-    if (activeTab) {
-        activeTab.classList.add('active', 'bg-blue-800', 'text-white');
-        activeTab.classList.remove('text-slate-600');
-    }
-    
-    if (tab === 'all-applications') {
-        renderApplicationsTable();
-    }
-    
-    if (tab === 'programmes') {
-        initProgrammeSliders();
-    }
-}
-
-// Initialize Programme Sliders & Cards
-function initProgrammeSliders() {
-    const wrapper = document.querySelector('.swiper-wrapper');
-    const cardsContainer = document.getElementById('programme-cards');
-    
-    if (!wrapper || !cardsContainer) return;
-    
-    wrapper.innerHTML = '';
-    cardsContainer.innerHTML = '';
-    
-    const programmes = Object.keys(programmeRequirements);
-    
-    programmes.forEach((prog, index) => {
-        const req = programmeRequirements[prog];
-        const progData = programmesData.find(p => p.code === prog) || {};
-        const imageName = progData.image || 'default';
-        
-        // Create Swiper Slide
-        const slide = document.createElement('div');
-        slide.className = 'swiper-slide';
-        
-        const imageHTML = (imageName && imageName !== 'default')
-            ? `<img src="${imageName}" class="w-full h-full object-cover" alt="${prog}">`
-            : `<div class="h-full w-full bg-gradient-to-br from-blue-800 to-slate-900 flex items-center justify-center">
-                   <i class="fa-solid fa-graduation-cap text-white text-6xl opacity-75"></i>
-               </div>`;
-        
-        slide.innerHTML = `
-            <div class="programme-card bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm h-full">
-                <div class="relative h-56 overflow-hidden">
-                    ${imageHTML}
-                    <div class="absolute inset-0 bg-gradient-to-b from-black/10 to-black/60"></div>
-                    <div class="absolute bottom-4 left-5 text-white">
-                        <div class="text-xs tracking-[2px] font-semibold opacity-75">DIPLOMA PROGRAMME</div>
-                        <div class="text-2xl font-extrabold leading-tight">${prog}</div>
-                    </div>
-                </div>
-                <div class="p-5">
-                    <p class="text-sm text-slate-600 line-clamp-3">${req.description}</p>
-                    <div class="mt-4 flex items-center justify-between text-xs">
-                        <div>
-                            <span class="font-bold text-blue-800">${req.minPoints}</span>
-                            <span class="text-slate-500">min points</span>
-                        </div>
-                        <div class="px-3 py-1 bg-blue-50 text-blue-700 rounded-2xl font-semibold">
-                            ${req.subjects.join(' + ')}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        wrapper.appendChild(slide);
-        
-        // Create Card
-        const card = document.createElement('div');
-        card.className = 'programme-card bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm cursor-pointer';
-        card.innerHTML = `
-            <div class="relative h-40">
-                <img src="https://picsum.photos/id/${(index + 10) * 3}/600/400" 
-                     class="w-full h-full object-cover" alt="${prog}">
-                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/70"></div>
-                <div class="absolute bottom-3 left-4 text-white">
-                    <div class="text-xl font-extrabold">${prog}</div>
-                </div>
-            </div>
-            <div class="p-4">
-                <p class="text-xs text-slate-600 line-clamp-2 mb-3">${req.description}</p>
-                <div class="flex justify-between items-center text-xs">
-                    <div><span class="font-extrabold text-blue-800">${req.minPoints}</span> <span class="text-slate-500">pts</span></div>
-                    <div class="text-[10px] px-2.5 py-0.5 bg-slate-100 rounded-xl text-slate-600">${req.subjects[0]}</div>
-                </div>
-            </div>
-        `;
-        card.onclick = () => {
-            showTab('new-application');
-            setTimeout(() => {
-                const select = document.getElementById('programme1');
-                if (select) {
-                    select.value = prog;
-                    updatePrerequisiteFields();
-                }
-            }, 300);
-        };
-        cardsContainer.appendChild(card);
-    });
-    
-    // Initialize Swiper
-    if (swiperInstance) {
-        swiperInstance.destroy(true, true);
-    }
-    
-    swiperInstance = new Swiper('.mySwiper', {
-        slidesPerView: 1,
-        spaceBetween: 20,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        breakpoints: {
-            640: { slidesPerView: 2 },
-            1024: { slidesPerView: 3 }
-        },
-        autoplay: {
-            delay: 4500,
-            disableOnInteraction: false,
-        },
-        loop: true
-    });
-}
-
-// Initialize Application
-function initializeApp() {
-    initializeTailwind();
-    initializeSubjectsTable();
-    
-    // Set receipt number
-    const receipt = document.getElementById('receipt-number');
-    if (receipt) receipt.value = 'REC-2026-' + Date.now().toString().slice(-5);
-    
-    // Initial points calculation
-    setTimeout(() => calculatePoints(), 400);
-    
-    // Update count
-    updateAppCount();
-    
-    // Show default tab
-    document.getElementById('new-application').classList.remove('hidden');
-    const firstTab = document.getElementById('tab-new-application');
-    if (firstTab) firstTab.classList.add('active', 'bg-blue-800', 'text-white');
-    
-    // Keyboard support
-    document.addEventListener('keypress', function(e) {
-        if (e.target.classList.contains('grade-input') && e.key === 'Enter') {
-            calculatePoints();
+    // Update active tab style
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.remove('active', 'bg-blue-800', 'text-white');
+        btn.classList.add('text-slate-600');
+        if (btn.id === `tab-${tabId}`) {
+            btn.classList.add('active', 'bg-blue-800', 'text-white');
+            btn.classList.remove('text-slate-600');
         }
     });
     
-    // Seed demo data if empty (for first-time demo)
-    if (!localStorage.getItem('admissions')) {
-        // Uncomment below line if you want demo data on first load
-        // seedDemoData();
+    // Special actions per tab
+    if (tabId === 'all-applications') {
+        renderApplicationsTable();
+    }
+    if (tabId === 'programmes' && swiperInstance) {
+        setTimeout(() => swiperInstance.update(), 100);
     }
 }
 
-// Optional demo data
-function seedDemoData() {
-    const demo = [{
-        id: Date.now() - 100000,
-        ref: 'REC-884721',
-        date: new Date(Date.now() - 86400000 * 2).toISOString(),
-        programme: 'Fashion Design',
-        surname: 'Mahlathini',
-        firstName: 'Mpaphi',
-        otherNames: '',
-        dob: '1998-03-12',
-        gender: 'Male',
-        identityNumber: '123411234',
-        senOvc: 'No',
-        workExperience: 6,
-        bestSixPoints: 34,
-        status: 'Qualified'
-    }];
-    localStorage.setItem('admissions', JSON.stringify(demo));
+// ==================== SWIPER & PROGRAMME CARDS ====================
+function initSwiper() {
+    const swiperEl = document.querySelector('.mySwiper');
+    if (!swiperEl || typeof Swiper === 'undefined') return;
+    
+    swiperInstance = new Swiper('.mySwiper', {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        breakpoints: {
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 }
+        }
+    });
+    
+    // Populate slides
+    const wrapper = swiperEl.querySelector('.swiper-wrapper');
+    if (!wrapper) return;
+    wrapper.innerHTML = '';
+    
+    PROGRAMMES.forEach(prog => {
+        const req = PROGRAMME_REQUIREMENTS[prog.value] || {};
+        const slide = document.createElement('div');
+        slide.className = 'swiper-slide';
+        slide.innerHTML = `
+            <div class="programme-card bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 h-full flex flex-col">
+                <div class="flex items-center gap-x-3 mb-4">
+                    <div class="w-11 h-11 rounded-2xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center flex-shrink-0">
+                        <i class="fa-solid fa-graduation-cap text-blue-700 dark:text-blue-400 text-xl"></i>
+                    </div>
+                    <div class="font-bold text-lg leading-tight">${prog.label}</div>
+                </div>
+                <div class="text-sm text-slate-600 dark:text-slate-300 flex-1">
+                    ${req.note || 'Technical and vocational training with industry-relevant skills.'}
+                    ${req.minPoints ? `<div class="mt-3 text-xs"><span class="font-semibold">Min Points:</span> ${req.minPoints} (Standard) / ${req.minPointsSpecial || req.minPoints} (SEN/OVC/RAD)</div>` : ''}
+                </div>
+                <button onclick="quickApply('${prog.value}'); event.stopImmediatePropagation();" 
+                        class="mt-5 w-full py-2.5 text-sm font-semibold bg-blue-800 hover:bg-blue-900 text-white rounded-2xl transition-colors">
+                    Apply for this Programme
+                </button>
+            </div>
+        `;
+        wrapper.appendChild(slide);
+    });
 }
 
+function populateProgrammeCards() {
+    const grid = document.getElementById('programme-cards');
+    if (!grid) return;
+    
+    grid.innerHTML = '';
+    
+    PROGRAMMES.forEach(prog => {
+        const req = PROGRAMME_REQUIREMENTS[prog.value] || {};
+        const card = document.createElement('div');
+        card.className = 'programme-card bg-white dark:bg-slate-800 rounded-3xl p-6 border border-slate-200 dark:border-slate-700 flex flex-col h-full';
+        card.innerHTML = `
+            <div class="flex-1">
+                <div class="font-extrabold text-xl mb-2 leading-tight">${prog.label}</div>
+                <div class="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-bold mb-3">DTT&TE • FCTVE</div>
+                <div class="text-sm text-slate-600 dark:text-slate-300 mb-4 line-clamp-3">
+                    ${req.note || 'Industry-aligned technical diploma with practical training and strong employment outcomes.'}
+                </div>
+                ${req.minPoints ? `
+                    <div class="inline-flex items-center gap-x-2 text-xs bg-slate-100 dark:bg-slate-700 px-3 py-1 rounded-2xl mb-2">
+                        <span class="font-bold">Entry:</span> 
+                        <span class="font-mono">${req.minPoints} pts</span>
+                    </div>
+                ` : ''}
+            </div>
+            <button onclick="quickApply('${prog.value}')" 
+                    class="mt-auto w-full py-3 text-sm font-bold bg-white border-2 border-blue-800 text-blue-800 hover:bg-blue-800 hover:text-white rounded-2xl transition-all active:scale-[0.985]">
+                SELECT THIS PROGRAMME
+            </button>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function quickApply(progValue) {
+    // Switch to new application and prefill 1st choice
+    showTab('new-application');
+    
+    setTimeout(() => {
+        const choice1 = document.getElementById('choice1');
+        if (choice1) {
+            choice1.value = progValue;
+            validateChoices();
+            updatePrerequisiteFields();
+            // Scroll to form top
+            document.getElementById('new-application').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 150);
+}
+
+// ==================== DRAFT & DEMO ====================
+function autoSaveDraft() {
+    clearTimeout(draftTimer);
+    draftTimer = setTimeout(() => {
+        const form = document.getElementById('admission-form');
+        if (!form) return;
+        
+        const draft = {
+            choice1: document.getElementById('choice1')?.value,
+            choice2: document.getElementById('choice2')?.value,
+            choice3: document.getElementById('choice3')?.value,
+            receiptNumber: document.getElementById('receipt-number')?.value,
+            surname: document.getElementById('surname')?.value,
+            firstName: document.getElementById('first-name')?.value,
+            // add more as needed
+            timestamp: Date.now()
+        };
+        localStorage.setItem('admissionsDraft', JSON.stringify(draft));
+    }, 800);
+}
+
+function restoreDraft() {
+    const draftStr = localStorage.getItem('admissionsDraft');
+    if (!draftStr) return;
+    
+    try {
+        const draft = JSON.parse(draftStr);
+        if (Date.now() - draft.timestamp > 1000 * 60 * 60 * 6) { // 6h expiry
+            localStorage.removeItem('admissionsDraft');
+            return;
+        }
+        
+        // Restore key fields
+        const map = {
+            'choice1': draft.choice1,
+            'choice2': draft.choice2,
+            'choice3': draft.choice3,
+            'receipt-number': draft.receiptNumber,
+            'surname': draft.surname,
+            'first-name': draft.firstName
+        };
+        
+        Object.keys(map).forEach(id => {
+            const el = document.getElementById(id);
+            if (el && map[id]) el.value = map[id];
+        });
+        
+        // Recalc after restore
+        setTimeout(() => {
+            calculateAndUpdatePoints();
+            updatePrerequisiteFields();
+        }, 300);
+        
+        console.log('%c[DRAFT] Restored previous form progress', 'color:#64748b');
+    } catch (e) {}
+}
+
+function initDemoDataIfNeeded() {
+    if (applications.length > 0) return;
+    
+    // Add 2-3 realistic demo applications so the All Applications tab is not empty on first use
+    const demo1 = {
+        id: Date.now() - 86400000 * 2,
+        ref: 'APP-2026-0101',
+        submittedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
+        personal: { surname: 'Molefe', firstName: 'Thabo', otherNames: 'James', dob: '2005-03-12', gender: 'Male', identityNumber: '050312345', nationality: 'Botswana' },
+        nextOfKin: { name: 'Molefe Sarah', relationship: 'Parent', phone: '+267 71 234 567', email: 'sarah.molefe@email.com' },
+        choices: [
+            { rank: 1, programme: 'Computer Networking', eligibility: { eligible: true, status: 'Qualified' } },
+            { rank: 2, programme: 'Systems Administration', eligibility: { eligible: true, status: 'Qualified' } }
+        ],
+        education: { grades: { EN: 6, MA: 7, CS: 6, BI: 5 }, bestSixPoints: 32, totalPoints: 41 },
+        specialCategory: 'No',
+        workExperienceMonths: 0,
+        vocationalQualification: null,
+        documents: { id: true, bgcse: true, kin: true, vocational: false, sponsor: false, medical: false },
+        receiptNumber: 'REC-2026-00442',
+        overallStatus: 'Qualified',
+        primaryProgramme: 'Computer Networking'
+    };
+    
+    const demo2 = {
+        id: Date.now() - 86400000,
+        ref: 'APP-2026-0102',
+        submittedAt: new Date(Date.now() - 86400000).toISOString(),
+        personal: { surname: 'Dlamini', firstName: 'Lerato', otherNames: '', dob: '2006-08-22', gender: 'Female', identityNumber: '060822789', nationality: 'Botswana' },
+        nextOfKin: { name: 'Dlamini Joseph', relationship: 'Guardian', phone: '+267 76 555 123', email: '' },
+        choices: [ { rank: 1, programme: 'Fashion Design', eligibility: { eligible: false, status: 'Not Qualified' } } ],
+        education: { grades: { EN: 4, FF: 3, AD: 5 }, bestSixPoints: 24, totalPoints: 29 },
+        specialCategory: 'OVC',
+        workExperienceMonths: 8,
+        vocationalQualification: { name: 'NC in Fashion Design', institution: 'FCTVE', year: '2025', durationMonths: 12 },
+        documents: { id: true, bgcse: true, kin: true, vocational: true, sponsor: false, medical: false },
+        receiptNumber: 'REC-2026-00451',
+        overallStatus: 'Review Recommended (points met, subjects pending)',
+        primaryProgramme: 'Fashion Design'
+    };
+    
+    applications = [demo1, demo2];
+    localStorage.setItem('fctveApplications', JSON.stringify(applications));
+    updateAppCount();
+}
+
+// ==================== UTILITIES ====================
+function showToast(message, type = 'success') {
+    const container = document.body;
+    
+    const toast = document.createElement('div');
+    toast.className = `toast fixed bottom-6 right-6 z-[100] px-6 py-3.5 rounded-2xl shadow-xl flex items-center gap-x-3 text-sm font-medium max-w-sm
+        ${type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-red-600 text-white' : 'bg-slate-800 text-white'}`;
+    
+    const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+    toast.innerHTML = `
+        <i class="fa-solid ${icon} text-lg"></i>
+        <span>${message}</span>
+    `;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.style.transition = 'all 0.3s ease';
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3800);
+}
+
+function updateDarkModeIcon(isDark) {
+    const icon = document.getElementById('dark-mode-icon');
+    if (!icon) return;
+    if (isDark) {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+    } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+    }
+}
+
+// Make key functions global for inline handlers
+window.showTab = showTab;
+window.submitApplication = submitApplication;
+window.updatePrerequisiteFields = updatePrerequisiteFields;
+window.validateIdentityNumber = validateIdentityNumber;
+window.validateChoices = validateChoices;
+window.showApplicationDetail = showApplicationDetail;
+window.hideModal = hideModal;
+window.deleteCurrentApplication = deleteCurrentApplication;
+window.exportToCSV = exportToCSV;
+window.clearAllApplications = clearAllApplications;
+window.quickApply = quickApply;
+
 // Boot
-window.onload = initializeApp;
+document.addEventListener('DOMContentLoaded', init);
