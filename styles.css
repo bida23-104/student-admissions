@@ -1,226 +1,270 @@
-/* FCTVE Admissions Portal - Custom Styles */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600&display=swap');
-
-:root {
-    --primary: #1e40af;
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
 }
 
 body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: #f1f5f9;
+    color: #0f172a;
 }
 
-.header-font {
-    font-family: 'Poppins', system-ui, sans-serif;
-    font-weight: 600;
+/* =========================
+   LOGIN SCREEN
+========================= */
+#login-screen {
+    background: linear-gradient(135deg, #1e3a8a, #0f172a);
 }
 
-/* Form Styles */
+#login-screen .bg-white {
+    border-radius: 24px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+#app-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+aside {
+    background: #0f172a;
+    color: white;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+}
+
+aside h2 {
+    letter-spacing: 1px;
+}
+
+.sidebar-link {
+    width: 100%;
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #cbd5e1;
+    transition: 0.2s;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.sidebar-link:hover {
+    background: #1e293b;
+    color: white;
+}
+
+.sidebar-link i {
+    width: 20px;
+}
+
+/* =========================
+   MAIN CONTENT
+========================= */
+main {
+    background: #f1f5f9;
+    width: 100%;
+    overflow-y: auto;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+header {
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+/* =========================
+   PAGE SECTIONS
+========================= */
+.page-section {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* =========================
+   CARDS (DASHBOARD)
+========================= */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card h3 {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 26px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* =========================
+   CHART CARDS
+========================= */
+.chart-card {
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+/* =========================
+   FORMS
+========================= */
 .form-input {
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: white;
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 12px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+    transition: 0.2s;
+    background: white;
 }
 
 .form-input:focus {
-    outline: none;
-    border-color: #1e40af;
-    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+button {
+    transition: 0.2s;
+}
+
+button:hover {
     transform: translateY(-1px);
 }
 
-.dark .form-input {
-    background-color: #1e293b;
-    border-color: #475569;
-    color: #e2e8f0;
+/* =========================
+   TABLES
+========================= */
+table {
+    border-collapse: collapse;
 }
 
-.dark .form-input:focus {
-    border-color: #60a5fa;
-    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.15);
-}
-
-/* Section Header */
-.section-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #1e293b;
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid #e2e8f0;
-}
-
-.dark .section-header {
-    color: #f1f5f9;
-    border-bottom-color: #334155;
-}
-
-.section-header i {
-    color: #1e40af;
-    font-size: 1.1rem;
-}
-
-/* Navigation Tabs */
-.nav-tab {
-    transition: all 0.2s ease;
-}
-
-.nav-tab.active {
-    box-shadow: 0 4px 6px -1px rgb(30 64 175 / 0.2), 0 2px 4px -2px rgb(30 64 175 / 0.2);
-}
-
-.nav-tab:not(.active):hover {
-    background-color: #f8fafc;
-}
-
-.dark .nav-tab:not(.active):hover {
-    background-color: #1e293b;
-}
-
-/* Data Table */
-.data-table th {
-    background-color: #f8fafc;
-    font-weight: 600;
+th {
+    text-align: left;
+    padding: 12px;
+    background: #f8fafc;
+    font-size: 13px;
     color: #475569;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
 }
 
-.dark .data-table th {
-    background-color: #1e293b;
-    color: #94a3b8;
+td {
+    padding: 12px;
+    border-top: 1px solid #e2e8f0;
+    font-size: 14px;
 }
 
-.data-table td {
-    vertical-align: middle;
-}
-
-/* Status Badges */
-.status-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.25rem 0.75rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-}
-
-.status-qualified { background-color: #dcfce7; color: #166534; }
-.status-not-qualified { background-color: #fee2e2; color: #991b1b; }
-.status-pending { background-color: #fef3c7; color: #92400e; }
-.status-review { background-color: #dbeafe; color: #1e40af; }
-.status-sen { background-color: #e0e7ff; color: #3730a3; }
-
-/* Modal */
-.modal {
-    animation: modalPop 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes modalPop {
-    from { opacity: 0; transform: scale(0.95) translateY(10px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-/* Prerequisite Status Cards */
-.prereq-card {
-    transition: all 0.2s ease;
-    border-left: 4px solid #64748b;
-}
-
-.prereq-card.eligible { border-left-color: #16a34a; background-color: #f0fdf4; }
-.prereq-card.not-eligible { border-left-color: #dc2626; background-color: #fef2f2; }
-.prereq-card.partial { border-left-color: #ca8a04; background-color: #fefce8; }
-
-.dark .prereq-card.eligible { background-color: #052e16; }
-.dark .prereq-card.not-eligible { background-color: #450a0a; }
-.dark .prereq-card.partial { background-color: #422006; }
-
-/* Subject Grade Inputs */
-.grade-input {
-    width: 60px;
-    text-align: center;
+/* =========================
+   STATUS BADGES
+========================= */
+.status {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
     font-weight: 600;
-    text-transform: uppercase;
 }
 
-.grade-input:focus {
-    border-color: #1e40af;
-    box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.15);
+.status.pending {
+    background: #fef9c3;
+    color: #a16207;
 }
 
-/* Swiper Custom */
-.swiper {
-    padding-bottom: 2.5rem;
+.status.accepted {
+    background: #dcfce7;
+    color: #166534;
 }
 
-.swiper-pagination-bullet {
-    background: #64748b;
-    opacity: 0.5;
+.status.rejected {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
-.swiper-pagination-bullet-active {
-    background: #1e40af;
-    opacity: 1;
-    width: 24px;
-    border-radius: 4px;
+.status.review {
+    background: #dbeafe;
+    color: #1d4ed8;
 }
 
-/* Programme Cards */
-.programme-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: 1px solid #e2e8f0;
+/* =========================
+   PROGRAMME CAPACITY BARS
+========================= */
+.capacity-bar {
+    height: 10px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 8px;
 }
 
-.programme-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+.capacity-fill {
+    height: 100%;
+    background: #2563eb;
+    width: 0%;
+    transition: 0.3s;
 }
 
-.dark .programme-card {
-    border-color: #334155;
+/* =========================
+   SIDEBAR ACTIVE STATE (JS CONTROLLED)
+========================= */
+.sidebar-link.active {
+    background: #1d4ed8;
+    color: white;
 }
 
-/* Toast Notification */
-.toast {
-    animation: slideInRight 0.3s ease forwards;
+/* =========================
+   LOGIN CARD
+========================= */
+#login-screen .bg-white {
+    box-shadow: 0 25px 60px rgba(0,0,0,0.25);
 }
 
-@keyframes slideInRight {
-    from { transform: translateX(100%); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 768px) {
+    aside {
+        width: 100%;
+        position: relative;
+    }
 
-/* Dark mode adjustments */
-.dark .bg-white {
-    background-color: #1e293b !important;
-}
-
-.dark .bg-slate-50 {
-    background-color: #0f172a !important;
-}
-
-.dark .text-slate-900 {
-    color: #f1f5f9 !important;
-}
-
-.dark .text-slate-600, .dark .text-slate-700 {
-    color: #94a3b8 !important;
-}
-
-.dark .border-slate-100, .dark .border-slate-200, .dark .border-slate-300 {
-    border-color: #334155 !important;
-}
-
-/* Utility for points display */
-.tabular-nums {
-    font-variant-numeric: tabular-nums;
-}
-
-/* Responsive table scroll hint */
-.overflow-x-auto {
-    scrollbar-width: thin;
-    scrollbar-color: #cbd5e1 #f1f5f9;
+    #app-container {
+        flex-direction: column;
+    }
 }
