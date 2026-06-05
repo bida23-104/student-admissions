@@ -17,10 +17,66 @@ let programmes = [
 // =========================
 // LOGIN (SIMPLE DEMO)
 // =========================
-const users = [
+let users = JSON.parse(localStorage.getItem("users")) || [
     { username: "admin", password: "admin123", role: "admin" },
     { username: "officer", password: "review123", role: "officer" }
 ];
+function login(username, password) {
+
+    let user = users.find(u =>
+        u.username === username && u.password === password
+    );
+
+    if (!user) {
+        alert("Invalid login details");
+        return;
+    }
+
+    currentUser = user;
+
+    localStorage.setItem("currentUser", JSON.stringify(user));
+
+    document.getElementById("login-screen").classList.add("hidden");
+    document.getElementById("app-container").classList.remove("hidden");
+
+    document.getElementById("logged-user").innerText = user.username;
+
+    updateDashboard();
+}
+function signup(username, password) {
+
+    let exists = users.find(u => u.username === username);
+
+    if (exists) {
+        alert("User already exists");
+        return;
+    }
+
+    users.push({
+        username,
+        password,
+        role: "officer"
+    });
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created successfully!");
+}
+function resetPassword(username, newPassword) {
+
+    let user = users.find(u => u.username === username);
+
+    if (!user) {
+        alert("User not found");
+        return;
+    }
+
+    user.password = newPassword;
+
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Password updated successfully!");
+}
 
 document.getElementById("login-form").addEventListener("submit", e => {
     e.preventDefault();
