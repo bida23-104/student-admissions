@@ -1,9 +1,9 @@
 ////////////////////////////////////////////////////
-// FINAL POLISH - FCTVE ADMISSIONS SYSTEM
+// FCTVE ADMISSIONS SYSTEM - CLEAN VERSION (NO LOGIN)
 ////////////////////////////////////////////////////
 
 // =========================
-// STATE
+// GLOBAL STATE
 // =========================
 let applications = JSON.parse(localStorage.getItem("applications")) || [];
 
@@ -15,114 +15,32 @@ let programmes = [
 ];
 
 // =========================
-// LOGIN (SIMPLE DEMO)
-// =========================
-let users = JSON.parse(localStorage.getItem("users")) || [
-    { username: "admin", password: "admin123", role: "admin" },
-    { username: "officer", password: "review123", role: "officer" }
-];
-function login(username, password) {
-
-    let user = users.find(u =>
-        u.username === username && u.password === password
-    );
-
-    if (!user) {
-        alert("Invalid login details");
-        return;
-    }
-
-    currentUser = user;
-
-    localStorage.setItem("currentUser", JSON.stringify(user));
-
-    document.getElementById("login-screen").classList.add("hidden");
-    document.getElementById("app-container").classList.remove("hidden");
-
-    document.getElementById("logged-user").innerText = user.username;
-
-    updateDashboard();
-}
-function signup(username, password) {
-
-    let exists = users.find(u => u.username === username);
-
-    if (exists) {
-        alert("User already exists");
-        return;
-    }
-
-    users.push({
-        username,
-        password,
-        role: "officer"
-    });
-
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Account created successfully!");
-}
-function resetPassword(username, newPassword) {
-
-    let user = users.find(u => u.username === username);
-
-    if (!user) {
-        alert("User not found");
-        return;
-    }
-
-    user.password = newPassword;
-
-    localStorage.setItem("users", JSON.stringify(users));
-
-    alert("Password updated successfully!");
-}
-
-document.getElementById("login-form").addEventListener("submit", e => {
-    e.preventDefault();
-
-    const u = username.value;
-    const p = password.value;
-
-    let user = users.find(x => x.username === u && x.password === p);
-
-    if (!user) return alert("Invalid login");
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    login-screen.classList.add("hidden");
-    app-container.classList.remove("hidden");
-
-    updateDashboard();
-    renderApplications();
-});
-
-// =========================
 // NAVIGATION
 // =========================
 function showSection(id) {
     document.querySelectorAll(".page-section")
-        .forEach(s => s.classList.add("hidden"));
+        .forEach(sec => sec.classList.add("hidden"));
 
     document.getElementById(id).classList.remove("hidden");
 }
 
 // =========================
-// BEST 6 POINTS
+// BEST 6 POINTS CALCULATION
 // =========================
 function calcPoints(grades) {
-    const map = {A:1,B:2,C:3,D:4,E:5,F:6,G:7};
+    const map = { A:1, B:2, C:3, D:4, E:5, F:6, G:7 };
 
-    let pts = grades.map(g => map[g] || 7);
-    pts.sort((a,b)=>a-b);
+    let points = grades.map(g => map[g] || 7);
+    points.sort((a,b)=>a-b);
 
-    return pts.slice(0,6).reduce((a,b)=>a+b,0);
+    return points.slice(0,6).reduce((a,b)=>a+b,0);
 }
 
 // =========================
 // ELIGIBILITY RULES
 // =========================
 function eligible(points, programme) {
+
     const rules = {
         "Computer Networking": 18,
         "Systems Administration": 20,
@@ -134,7 +52,7 @@ function eligible(points, programme) {
 }
 
 // =========================
-// RANKED CHOICE ENGINE (KEY FEATURE)
+// RANKED CHOICE ALLOCATION
 // =========================
 function allocate(app) {
 
@@ -167,7 +85,10 @@ document.getElementById("admissionForm").addEventListener("submit", e => {
         firstname: firstname.value,
         identity: identity.value,
         choices: [choice1.value, choice2.value, choice3.value],
+
+        // demo grades (you can replace with real inputs later)
         points: calcPoints(["A","B","C","D","C","B","A"]),
+
         status: "Submitted",
         programme: null
     };
@@ -183,7 +104,7 @@ document.getElementById("admissionForm").addEventListener("submit", e => {
     updateDashboard();
     renderApplications();
 
-    alert("Application processed successfully!");
+    alert("Application submitted successfully!");
 });
 
 // =========================
@@ -206,7 +127,7 @@ function updateDashboard() {
 }
 
 // =========================
-// CHARTS (POLISHED)
+// ANALYTICS + CHARTS
 // =========================
 let programmeChart, statusChart;
 
@@ -217,11 +138,10 @@ function updateCharts() {
 
     applications.forEach(a => {
 
-        programmeCount[a.programme || "None"] =
-            (programmeCount[a.programme || "None"] || 0) + 1;
+        let prog = a.programme || "Unassigned";
+        programmeCount[prog] = (programmeCount[prog] || 0) + 1;
 
-        statusCount[a.status] =
-            (statusCount[a.status] || 0) + 1;
+        statusCount[a.status] = (statusCount[a.status] || 0) + 1;
     });
 
     if (programmeChart) programmeChart.destroy();
@@ -250,7 +170,7 @@ function updateCharts() {
 }
 
 // =========================
-// RENDER TABLE
+// TABLE RENDER
 // =========================
 function renderApplications() {
 
@@ -274,24 +194,56 @@ function renderApplications() {
 }
 
 // =========================
-// ADMISSION LETTER (BIG MARKS FEATURE)
+// SEARCH
 // =========================
-function generateLetter(app) {
+document.getElementById("searchInput")?.addEventListener("input", e => {
 
-    let text = `
-    LETTER OF ADMISSION
+    let value = e.target.value.toLowerCase();
 
-    Dear ${app.firstname} ${app.surname},
+    let filtered = applications.filter(a =>
+        a.surname.toLowerCase().includes(value) ||
+        a.firstname.toLowerCase().includes(value) ||
+        a.identity.includes(value)
+    );
 
-    You have been ${app.status} into:
-    ${app.programme || "N/A"}
+    renderFiltered(filtered);
+});
 
-    Congratulations.
-    `;
+function renderFiltered(data) {
 
-    let win = window.open();
-    win.document.write(`<pre>${text}</pre>`);
-    win.print();
+    applicationsTable.innerHTML = "";
+
+    data.forEach(a => {
+
+        applicationsTable.innerHTML += `
+        <tr>
+            <td>${a.surname} ${a.firstname}</td>
+            <td>${a.programme || "-"}</td>
+            <td>${a.points}</td>
+            <td>${a.status}</td>
+            <td><button>View</button></td>
+        </tr>`;
+    });
+}
+
+// =========================
+// EXPORT CSV
+// =========================
+function exportCSV() {
+
+    let csv = "Name,Programme,Points,Status\n";
+
+    applications.forEach(a => {
+        csv += `${a.surname} ${a.firstname},${a.programme},${a.points},${a.status}\n`;
+    });
+
+    let blob = new Blob([csv], { type: "text/csv" });
+    let url = URL.createObjectURL(blob);
+
+    let a = document.createElement("a");
+    a.href = url;
+    a.download = "applications.csv";
+    a.click();
 }
 
 // =========================
