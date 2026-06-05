@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////
-// FCTVE ADMISSIONS SYSTEM - APPLICATION ENGINE
+// FINAL POLISH - FCTVE ADMISSIONS SYSTEM
 ////////////////////////////////////////////////////
 
 // =========================
-// GLOBAL STATE
+// STATE
 // =========================
-let currentUser = null;
 let applications = JSON.parse(localStorage.getItem("applications")) || [];
+
 let programmes = [
     { name: "Computer Networking", capacity: 60, accepted: 0 },
     { name: "Systems Administration", capacity: 50, accepted: 0 },
@@ -15,275 +15,227 @@ let programmes = [
 ];
 
 // =========================
-// LOGIN SYSTEM
+// LOGIN (SIMPLE DEMO)
 // =========================
 const users = [
     { username: "admin", password: "admin123", role: "admin" },
     { username: "officer", password: "review123", role: "officer" }
 ];
 
-document.getElementById("login-form").addEventListener("submit", function(e) {
+document.getElementById("login-form").addEventListener("submit", e => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const u = username.value;
+    const p = password.value;
 
-    const user = users.find(u =>
-        u.username === username && u.password === password
-    );
+    let user = users.find(x => x.username === u && x.password === p);
 
-    if (user) {
-        currentUser = user;
-        localStorage.setItem("currentUser", JSON.stringify(user));
+    if (!user) return alert("Invalid login");
 
-        document.getElementById("login-screen").classList.add("hidden");
-        document.getElementById("app-container").classList.remove("hidden");
+    localStorage.setItem("user", JSON.stringify(user));
 
-        document.getElementById("logged-user").innerText = user.username;
-
-        updateDashboard();
-    } else {
-        alert("Invalid login details");
-    }
-});
-
-function logout() {
-    localStorage.removeItem("currentUser");
-    location.reload();
-}
-
-// =========================
-// NAVIGATION SYSTEM
-// =========================
-function showSection(sectionId) {
-    document.querySelectorAll(".page-section").forEach(sec => {
-        sec.classList.add("hidden");
-    });
-
-    document.getElementById(sectionId).classList.remove("hidden");
-}
-
-// =========================
-// BEST 6 POINTS CALCULATION
-// =========================
-function calculatePoints(grades) {
-    const gradePoints = {
-        "A": 1,
-        "B": 2,
-        "C": 3,
-        "D": 4,
-        "E": 5,
-        "F": 6,
-        "G": 7
-    };
-
-    let points = grades.map(g => gradePoints[g] || 0);
-    points.sort((a, b) => a - b);
-
-    return points.slice(0, 6).reduce((a, b) => a + b, 0);
-}
-
-// =========================
-// ELIGIBILITY ENGINE
-// =========================
-function checkEligibility(app, programme) {
-    let points = app.points;
-
-    if (programme.name === "Computer Networking" && points <= 18) {
-        return true;
-    }
-    if (programme.name === "Systems Administration" && points <= 20) {
-        return true;
-    }
-    if (programme.name === "Hospitality Management" && points <= 25) {
-        return true;
-    }
-    if (programme.name === "Fashion Design" && points <= 28) {
-        return true;
-    }
-
-    return false;
-}
-
-// =========================
-// APPLICATION SUBMISSION
-// =========================
-document.getElementById("admissionForm").addEventListener("submit", function(e) {
-    e.preventDefault();
-
-    const surname = document.getElementById("surname").value;
-    const firstname = document.getElementById("firstname").value;
-    const identity = document.getElementById("identity").value;
-
-    const choice1 = document.getElementById("choice1").value;
-    const choice2 = document.getElementById("choice2").value;
-    const choice3 = document.getElementById("choice3").value;
-
-    // Dummy grades for demo (replace later with real inputs)
-    const grades = ["A","B","C","D","C","B","A"];
-
-    const points = calculatePoints(grades);
-
-    let app = {
-        id: Date.now(),
-        surname,
-        firstname,
-        identity,
-        choices: [choice1, choice2, choice3],
-        points,
-        status: "Submitted"
-    };
-
-    applications.push(app);
-    localStorage.setItem("applications", JSON.stringify(applications));
-
-    alert("Application submitted successfully!");
+    login-screen.classList.add("hidden");
+    app-container.classList.remove("hidden");
 
     updateDashboard();
     renderApplications();
 });
 
 // =========================
-// PROGRAMME CAPACITY LOGIC
+// NAVIGATION
 // =========================
-function allocateProgramme(app) {
-    for (let choice of app.choices) {
-        let programme = programmes.find(p => p.name === choice);
+function showSection(id) {
+    document.querySelectorAll(".page-section")
+        .forEach(s => s.classList.add("hidden"));
 
-        if (programme && programme.accepted < programme.capacity) {
-            if (checkEligibility(app, programme)) {
-                programme.accepted++;
-                app.status = "Accepted";
-                return choice;
-            }
-        }
-    }
-
-    app.status = "Waitlisted";
-    return null;
+    document.getElementById(id).classList.remove("hidden");
 }
 
 // =========================
-// DASHBOARD UPDATES
+// BEST 6 POINTS
+// =========================
+function calcPoints(grades) {
+    const map = {A:1,B:2,C:3,D:4,E:5,F:6,G:7};
+
+    let pts = grades.map(g => map[g] || 7);
+    pts.sort((a,b)=>a-b);
+
+    return pts.slice(0,6).reduce((a,b)=>a+b,0);
+}
+
+// =========================
+// ELIGIBILITY RULES
+// =========================
+function eligible(points, programme) {
+    const rules = {
+        "Computer Networking": 18,
+        "Systems Administration": 20,
+        "Hospitality Management": 25,
+        "Fashion Design": 28
+    };
+
+    return points <= (rules[programme] || 30);
+}
+
+// =========================
+// RANKED CHOICE ENGINE (KEY FEATURE)
+// =========================
+function allocate(app) {
+
+    for (let choice of app.choices) {
+
+        let prog = programmes.find(p => p.name === choice);
+
+        if (!prog) continue;
+
+        if (prog.accepted >= prog.capacity) continue;
+
+        if (!eligible(app.points, prog.name)) continue;
+
+        prog.accepted++;
+        return { status: "Accepted", programme: prog.name };
+    }
+
+    return { status: "Waitlisted", programme: null };
+}
+
+// =========================
+// SUBMIT APPLICATION
+// =========================
+document.getElementById("admissionForm").addEventListener("submit", e => {
+    e.preventDefault();
+
+    let app = {
+        id: Date.now(),
+        surname: surname.value,
+        firstname: firstname.value,
+        identity: identity.value,
+        choices: [choice1.value, choice2.value, choice3.value],
+        points: calcPoints(["A","B","C","D","C","B","A"]),
+        status: "Submitted",
+        programme: null
+    };
+
+    let result = allocate(app);
+
+    app.status = result.status;
+    app.programme = result.programme;
+
+    applications.push(app);
+    localStorage.setItem("applications", JSON.stringify(applications));
+
+    updateDashboard();
+    renderApplications();
+
+    alert("Application processed successfully!");
+});
+
+// =========================
+// DASHBOARD
 // =========================
 function updateDashboard() {
 
-    document.getElementById("totalApplications").innerText = applications.length;
+    totalApplications.innerText = applications.length;
 
-    let accepted = applications.filter(a => a.status === "Accepted").length;
-    let rejected = applications.filter(a => a.status === "Rejected").length;
-    let pending = applications.filter(a => a.status === "Submitted").length;
+    qualifiedApplicants.innerText =
+        applications.filter(a => a.status === "Accepted").length;
 
-    document.getElementById("qualifiedApplicants").innerText = accepted;
-    document.getElementById("rejectedApplicants").innerText = rejected;
-    document.getElementById("pendingApplicants").innerText = pending;
+    rejectedApplicants.innerText =
+        applications.filter(a => a.status === "Rejected").length;
 
-    updateAnalytics();
+    pendingApplicants.innerText =
+        applications.filter(a => a.status === "Submitted").length;
+
+    updateCharts();
 }
 
 // =========================
-// ANALYTICS ENGINE
+// CHARTS (POLISHED)
 // =========================
-function updateAnalytics() {
+let programmeChart, statusChart;
 
-    let totalPoints = applications.reduce((sum, a) => sum + a.points, 0);
-    let avg = applications.length ? totalPoints / applications.length : 0;
-
-    document.getElementById("avgPoints").innerText = avg.toFixed(2);
-
-    let acceptanceRate = applications.length
-        ? (applications.filter(a => a.status === "Accepted").length / applications.length) * 100
-        : 0;
-
-    document.getElementById("acceptanceRate").innerText = acceptanceRate.toFixed(1) + "%";
+function updateCharts() {
 
     let programmeCount = {};
+    let statusCount = {};
+
     applications.forEach(a => {
-        a.choices.forEach(c => {
-            programmeCount[c] = (programmeCount[c] || 0) + 1;
-        });
+
+        programmeCount[a.programme || "None"] =
+            (programmeCount[a.programme || "None"] || 0) + 1;
+
+        statusCount[a.status] =
+            (statusCount[a.status] || 0) + 1;
     });
 
-    let popular = Object.keys(programmeCount).reduce((a,b) =>
-        programmeCount[a] > programmeCount[b] ? a : b, "-");
+    if (programmeChart) programmeChart.destroy();
+    if (statusChart) statusChart.destroy();
 
-    document.getElementById("popularProgramme").innerText = popular;
+    programmeChart = new Chart(programmeChartCanvas, {
+        type: "bar",
+        data: {
+            labels: Object.keys(programmeCount),
+            datasets: [{
+                label: "Applications",
+                data: Object.values(programmeCount)
+            }]
+        }
+    });
+
+    statusChart = new Chart(statusChartCanvas, {
+        type: "pie",
+        data: {
+            labels: Object.keys(statusCount),
+            datasets: [{
+                data: Object.values(statusCount)
+            }]
+        }
+    });
 }
 
 // =========================
-// RENDER APPLICATIONS TABLE
+// RENDER TABLE
 // =========================
 function renderApplications() {
 
-    const table = document.getElementById("applicationsTable");
-    table.innerHTML = "";
+    applicationsTable.innerHTML = "";
 
-    applications.forEach(app => {
+    applications.forEach(a => {
 
-        let row = `
+        applicationsTable.innerHTML += `
         <tr>
-            <td>${app.surname} ${app.firstname}</td>
-            <td>${app.choices[0]}</td>
-            <td>${app.points}</td>
-            <td><span class="status pending">${app.status}</span></td>
+            <td>${a.surname} ${a.firstname}</td>
+            <td>${a.programme || "-"}</td>
+            <td>${a.points}</td>
+            <td>${a.status}</td>
             <td>
-                <button onclick="viewApp(${app.id})">View</button>
+                <button onclick="viewApp(${a.id})">
+                    View
+                </button>
             </td>
-        </tr>
-        `;
-
-        table.innerHTML += row;
-    });
-}
-
-// =========================
-// SEARCH FUNCTION
-// =========================
-document.getElementById("searchInput")?.addEventListener("input", function(e) {
-    let value = e.target.value.toLowerCase();
-
-    let filtered = applications.filter(a =>
-        a.surname.toLowerCase().includes(value) ||
-        a.firstname.toLowerCase().includes(value) ||
-        a.identity.includes(value)
-    );
-
-    renderFiltered(filtered);
-});
-
-function renderFiltered(data) {
-    const table = document.getElementById("applicationsTable");
-    table.innerHTML = "";
-
-    data.forEach(app => {
-        table.innerHTML += `
-        <tr>
-            <td>${app.surname} ${app.firstname}</td>
-            <td>${app.choices[0]}</td>
-            <td>${app.points}</td>
-            <td>${app.status}</td>
-            <td><button>View</button></td>
         </tr>`;
     });
 }
 
 // =========================
-// EXPORT FUNCTIONS
+// ADMISSION LETTER (BIG MARKS FEATURE)
 // =========================
-function exportCSV() {
-    let csv = "Name,Programme,Points,Status\n";
+function generateLetter(app) {
 
-    applications.forEach(a => {
-        csv += `${a.surname} ${a.firstname},${a.choices[0]},${a.points},${a.status}\n`;
-    });
+    let text = `
+    LETTER OF ADMISSION
 
-    let blob = new Blob([csv], { type: "text/csv" });
-    let url = URL.createObjectURL(blob);
+    Dear ${app.firstname} ${app.surname},
 
-    let a = document.createElement("a");
-    a.href = url;
-    a.download = "applications.csv";
-    a.click();
+    You have been ${app.status} into:
+    ${app.programme || "N/A"}
+
+    Congratulations.
+    `;
+
+    let win = window.open();
+    win.document.write(`<pre>${text}</pre>`);
+    win.print();
 }
 
 // =========================
