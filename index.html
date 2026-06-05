@@ -1,588 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FCTVE Admissions Portal • Francistown College of Technical &amp; Vocational Education</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <!-- Swiper.js for Image Sliders -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="styles.css">
-    
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Poppins:wght@500;600&amp;display=swap');
-        
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-        }
-        
-        .header-font {
-            font-family: 'Poppins', system-ui, sans-serif;
-            font-weight: 600;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FCTVE Admissions Management System</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-slate-50">
-    <!-- Top Navigation Bar -->
-    <div class="bg-white border-b border-slate-200 sticky top-0 z-40">
-        <div class="max-w-7xl mx-auto px-6">
-            <div class="flex items-center justify-between h-[78px]">
-                <!-- Logo + Institution Name -->
-                <div class="flex items-center gap-x-3.5">
-                    <!-- Logo -->
-                    <div class="w-[52px] h-[52px] flex items-center justify-center flex-shrink-0">
-                        <img src="logo.jpg" alt="FCTVE Logo" class="w-full h-full object-contain">
-                    </div>
-                    
-                    <!-- Institution Name -->
-                    <div class="leading-none">
-                        <h1 class="text-[19px] font-extrabold text-slate-900 header-font tracking-[-0.5px] leading-[1.1]">
-                            Francistown College of<br>Technical &amp; Vocational Education
-                        </h1>
-                        <p class="text-[10px] text-slate-500 mt-1 font-medium tracking-wide">
-                            Department of Technical &amp; Vocational Education <span class="font-semibold">(DTT&amp;TE)</span>
-                        </p>
-                    </div>
-                </div>
 
-                <div class="flex items-center gap-x-4">
-                    <!-- Academic Year Badge -->
-                    <div class="hidden md:flex items-center px-4 h-9 bg-emerald-100 text-emerald-700 rounded-3xl text-sm font-semibold">
-                        <i class="fa-solid fa-calendar-check mr-2"></i>
-                        <span>Academic Year 2026/2027</span>
-                    </div>
-                    
-                    <!-- Dark Mode Toggle + User Profile -->
-                    <div class="flex items-center gap-x-3">
-                        <!-- Dark Mode Toggle -->
-                        <button onclick="toggleDarkMode()" 
-                                class="w-9 h-9 flex items-center justify-center rounded-2xl border border-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                                title="Toggle Dark Mode">
-                            <i class="fa-solid fa-moon text-slate-600 dark:text-yellow-400" id="dark-mode-icon"></i>
-                        </button>
+<body class="bg-slate-100">
 
-                        <!-- User Profile (Clickable) -->
-                        <a href="profile.html" class="flex items-center gap-x-3 group">
-                            <div class="text-right hidden md:block">
-                                <div class="font-semibold text-slate-800 dark:text-slate-200 text-sm group-hover:text-blue-700 transition-colors">Mpaphi Mahlathini</div>
-                                <div class="text-[10px] text-slate-500 -mt-0.5">Admissions Officer • Palapye</div>
-                            </div>
-                            <div class="w-9 h-9 rounded-2xl overflow-hidden ring-2 ring-white shadow group-hover:ring-blue-200 transition-all">
-                                <img src="https://i.pravatar.cc/36?img=28" alt="Profile" class="w-full h-full object-cover">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- LOGIN SCREEN -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center">
 
-    <div class="max-w-7xl mx-auto px-6 pt-8 pb-16">
-        
-        <!-- Page Header -->
-        <div class="flex items-end justify-between mb-8">
-            <div>
-                <h2 class="text-4xl font-extrabold text-slate-900 tracking-tight">Student Admissions Portal</h2>
-                <p class="text-slate-600 mt-1 text-lg">Francistown College of Technical &amp; Vocational Education (FCTVE)</p>
-            </div>
-            
-            <div class="hidden md:block">
-                <div class="flex items-center gap-x-2 text-sm">
-                    <div class="px-3 py-1 bg-white rounded-2xl border text-slate-600 flex items-center gap-x-2">
-                        <i class="fa-solid fa-globe text-emerald-500"></i>
-                        <span class="font-medium">Online Applications Open</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="bg-white w-full max-w-md rounded-3xl shadow-xl p-8">
 
-        <!-- Navigation Tabs -->
-        <div class="flex items-center gap-x-2 mb-8 bg-white p-1.5 rounded-3xl shadow-sm border border-slate-100 w-fit">
-            <button onclick="showTab('new-application')" id="tab-new-application"
-                    class="nav-tab active px-7 py-3 text-sm font-semibold flex items-center gap-x-2 rounded-3xl bg-blue-800 text-white">
-                <i class="fa-solid fa-plus mr-1"></i>
-                <span>New Application</span>
-            </button>
-            
-            <button onclick="showTab('programmes')" id="tab-programmes"
-                    class="nav-tab px-7 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
-                <i class="fa-solid fa-images mr-1"></i>
-                <span>Available Programmes</span>
-            </button>
-            
-            <button onclick="showTab('all-applications')" id="tab-all-applications"
-                    class="nav-tab px-7 py-3 text-sm font-semibold flex items-center gap-x-2 text-slate-600 hover:text-slate-900 rounded-3xl">
-                <i class="fa-solid fa-list mr-1"></i>
-                <span>All Applications</span>
-                <span id="app-count" 
-                      class="ml-1 px-2.5 py-px text-xs font-bold bg-slate-100 text-slate-600 rounded-2xl">0</span>
-            </button>
-        </div>
+<div class="text-center mb-8">
 
-        <!-- ==================== NEW APPLICATION TAB ==================== -->
-        <div id="new-application" class="tab-content">
-            <div class="max-w-5xl">
-                <form id="admission-form" onsubmit="submitApplication(event)" class="space-y-8">
-                    
-                    <!-- Programme Selection -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                            <span>Programme Selection</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">First Choice Programme</label>
-                                <select id="programme" required onchange="updatePrerequisiteFields()"
-                                        class="form-input w-full px-4 py-3.5 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="">-- Select Programme --</option>
-                                    <option value="Fashion Design">Diploma in Fashion Design</option>
-                                    <option value="Beauty Therapy">Diploma in Beauty Therapy</option>
-                                    <option value="Travel Management">Diploma in Travel Management</option>
-                                    <option value="Hospitality Management">Diploma in Hospitality Management</option>
-                                    <option value="Culinary Arts">Diploma in Culinary Arts</option>
-                                    <option value="Computer Networking">Diploma in Computer Networking</option>
-                                    <option value="Systems Administration">Diploma in Systems Administration</option>
-                                    <option value="Health and Wellness">Diploma in Health and Wellness</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Receipt Number</label>
-                                <input type="text" id="receipt-number" placeholder="Enter Receipt Number (e.g. REC-2026-00123)"
-                                       class="form-input w-full px-4 py-3.5 border border-slate-300 rounded-2xl text-sm font-mono tracking-widest">
-                                <p class="text-xs text-slate-500 mt-1">Official receipt number issued to the applicant.</p>
-                            </div>
-                        </div>
-                    </div>
+<h1 class="text-3xl font-bold text-blue-900">
+FCTVE Admissions
+</h1>
 
-                    <!-- Personal Details -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-user"></i>
-                            <span>Personal Details</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Surname</label>
-                                <input type="text" id="surname" required class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">First Name</label>
-                                <input type="text" id="first-name" required class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Other Names</label>
-                                <input type="text" id="other-names" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Date of Birth</label>
-                                <input type="date" id="dob" required class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Gender</label>
-                                <select id="gender" required onchange="validateIdentityNumber()"
-                                        class="form-input w-full px-4 py-3.5 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="">Select Gender</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                </select>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Identity Number / Passport <span class="text-red-500">*</span></label>
-                                <input type="text" id="identity-number" maxlength="9" required 
-                                       oninput="validateIdentityNumber()" placeholder="e.g. 123456789 or Passport Number"
-                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm font-mono tracking-[3px]">
-                                <p id="id-error" class="text-red-500 text-xs mt-1 hidden font-medium"></p>
-                            </div>
-                            
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Nationality <span class="text-red-500">*</span></label>
-                                <input type="text" id="nationality" value="Botswana" required
-                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                            </div>
-                        </div>
-                    </div>
+<p class="text-slate-500 mt-2">
+Admissions Management System
+</p>
 
-                    <!-- Next of Kin Details -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-users"></i>
-                            <span>Next of Kin Details</span>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
-                                <input type="text" id="kin-name" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm" placeholder="Next of Kin Full Name">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Relationship</label>
-                                <select id="kin-relationship" class="form-input w-full px-4 py-3.5 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="">Select Relationship</option>
-                                    <option value="Parent">Parent</option>
-                                    <option value="Guardian">Guardian</option>
-                                    <option value="Sibling">Sibling</option>
-                                    <option value="Spouse">Spouse</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number</label>
-                                <input type="tel" id="kin-phone" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm" placeholder="+267 XX XXX XXX">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
-                                <input type="email" id="kin-email" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm" placeholder="nextkin@email.com">
-                            </div>
-                        </div>
-                    </div>
+</div>
 
-                    <!-- Education Results -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header flex items-center justify-between">
-                            <div class="flex items-center gap-x-3">
-                                <i class="fa-solid fa-book"></i>
-                                <span>BGCSE / Equivalent Results</span>
-                            </div>
-                            <div class="text-xs px-3 py-1 bg-blue-50 text-blue-700 rounded-2xl font-semibold flex items-center gap-x-1.5">
-                                <i class="fa-solid fa-info-circle"></i>
-                                <span>Enter grades A–G</span>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto pb-2">
-                            <table class="w-full text-sm min-w-[700px]">
-                                <thead>
-                                    <tr class="border-b border-slate-200">
-                                        <th class="text-left py-3 px-4 font-semibold text-slate-600">Subject</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-20">Grade</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Points</th>
-                                        <th class="text-left py-3 px-4 font-semibold text-slate-600 border-l">Subject</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-20">Grade</th>
-                                        <th class="text-center py-3 px-2 font-semibold text-slate-600 w-16">Points</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="subjects-table" class="divide-y divide-slate-100">
-                                    <!-- Populated by JavaScript -->
-                                </tbody>
-                            </table>
-                        </div>
-                        
-                        <div class="mt-6 pt-5 border-t flex items-center justify-between bg-slate-50 -mx-2 -mb-2 px-7 py-4 rounded-b-3xl">
-                            <div class="flex items-baseline gap-x-3">
-                                <span class="text-sm font-semibold text-slate-600">Best 6 Points</span>
-                                <span id="best-six-points" class="text-4xl font-extrabold text-blue-800 tabular-nums">0</span>
-                            </div>
-                            <div class="text-right">
-                                <div class="text-xs text-slate-500">Total Points (Top 6)</div>
-                                <div id="total-points" class="text-3xl font-extrabold text-slate-700 tabular-nums">0</div>
-                            </div>
-                        </div>
-                    </div>
+<form id="login-form" class="space-y-4">
 
-                    <!-- Prerequisites -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-check-double"></i>
-                            <span>Prerequisite Check</span>
-                        </div>
-                        <div id="prerequisite-section">
-                            <div class="text-slate-500 italic">Select a programme above to view requirements.</div>
-                        </div>
-                    </div>
+<div>
+<label class="font-medium text-sm">
+Username
+</label>
 
-                    <!-- Other Info -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                            <div class="section-header">
-                                <i class="fa-solid fa-users"></i>
-                                <span>Special Category</span>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">SEN / OVC / RAD Status</label>
-                                <select id="sen-ovc" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                    <option value="No">No</option>
-                                    <option value="SEN">Special Educational Needs (SEN)</option>
-                                    <option value="OVC">Orphaned &amp; Vulnerable Child (OVC)</option>
-                                    <option value="RAD">Refugee / Asylum Seeker</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                            <div class="section-header">
-                                <i class="fa-solid fa-briefcase"></i>
-                                <span>Work Experience</span>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Months of Relevant Experience</label>
-                                <input type="number" id="work-experience" value="0" min="0"
-                                       class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm">
-                                <p class="text-xs text-slate-500 mt-1.5">Enter 0 if no relevant experience.</p>
-                            </div>
-                        </div>
-                    </div>
+<input
+type="text"
+id="username"
+class="w-full border rounded-xl p-3">
+</div>
 
-                    <!-- Vocational & Educational Qualifications -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-graduation-cap"></i>
-                            <span>Vocational &amp; Educational Qualifications</span>
-                        </div>
-                        
-                        <div class="space-y-6">
-                            <!-- Vocational Qualification -->
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Vocational / Technical Qualification (if any)</label>
-                                <input type="text" id="vocational-qualification" class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm" 
-                                       placeholder="e.g. Certificate in Fashion Design, NC in Hospitality, etc.">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-3">
-                                    <div>
-                                        <label class="block text-xs text-slate-600 mb-1">Institution</label>
-                                        <input type="text" id="vocational-institution" class="form-input w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs text-slate-600 mb-1">Year Completed</label>
-                                        <input type="text" id="vocational-year" class="form-input w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs text-slate-600 mb-1">Duration (Months)</label>
-                                        <input type="number" id="vocational-duration" class="form-input w-full px-3 py-2.5 border border-slate-300 rounded-xl text-sm">
-                                    </div>
-                                </div>
-                            </div>
+<div>
+<label class="font-medium text-sm">
+Password
+</label>
 
-                            <!-- Other Relevant Academic Qualifications -->
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Other Relevant Academic Qualifications</label>
-                                <textarea id="other-qualifications" rows="2" 
-                                          class="form-input w-full px-4 py-3 border border-slate-300 rounded-2xl text-sm"
-                                          placeholder="List any other certificates, diplomas, or relevant academic achievements..."></textarea>
-                            </div>
-                        </div>
-                    </div>
+<input
+type="password"
+id="password"
+class="w-full border rounded-xl p-3">
+</div>
 
-                    <!-- Documents Section -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-                        <div class="section-header">
-                            <i class="fa-solid fa-file-upload"></i>
-                            <span>Supporting Documents (Duly Certified)</span>
-                        </div>
-                        
-                        <p class="text-sm text-slate-600 mb-4">Please confirm you have the following certified documents ready for submission:</p>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-id" checked class="accent-blue-800 w-4 h-4">
-                                <span>Certified copy of Identity Document / Passport</span>
-                            </label>
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-bgcse" checked class="accent-blue-800 w-4 h-4">
-                                <span>Certified BGCSE / Equivalent Results</span>
-                            </label>
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-kin" class="accent-blue-800 w-4 h-4">
-                                <span>Next of Kin Details / Consent Form</span>
-                            </label>
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-vocational" class="accent-blue-800 w-4 h-4">
-                                <span>Certified Vocational / Technical Certificates</span>
-                            </label>
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-sponsor" class="accent-blue-800 w-4 h-4">
-                                <span>Sponsorship Letter (if applicable)</span>
-                            </label>
-                            <label class="flex items-center gap-x-3 cursor-pointer">
-                                <input type="checkbox" id="doc-medical" class="accent-blue-800 w-4 h-4">
-                                <span>Medical Report / Special Needs Documentation</span>
-                            </label>
-                        </div>
-                        
-                        <div class="mt-5 pt-4 border-t text-xs text-slate-500">
-                            <i class="fa-solid fa-info-circle mr-1"></i> 
-                            All documents must be certified by a Commissioner of Oaths.
-                        </div>
-                    </div>
+<button
+type="submit"
+class="w-full bg-blue-800 text-white py-3 rounded-xl font-semibold">
 
-                    <!-- Submit -->
-                    <div class="flex justify-end pt-4">
-                        <button type="submit"
-                                class="px-10 py-4 bg-blue-800 hover:bg-blue-900 transition-all text-white font-bold rounded-3xl flex items-center gap-x-3 shadow-lg shadow-blue-800/30 text-sm tracking-wider active:scale-[0.985]">
-                            <i class="fa-solid fa-paper-plane"></i>
-                            <span>SUBMIT APPLICATION</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+Login
 
-        <!-- ==================== AVAILABLE PROGRAMMES TAB ==================== -->
-        <div id="programmes" class="tab-content hidden">
-            <div class="mb-8">
-                <h3 class="text-3xl font-extrabold text-slate-900">Available Programmes</h3>
-                <p class="text-slate-600 mt-1">Explore our technical and vocational programmes for the 2026/2027 academic year.</p>
-            </div>
+</button>
 
-            <!-- Swiper Slider -->
-            <div class="swiper mySwiper mb-10">
-                <div class="swiper-wrapper">
-                    <!-- Programme Slides will be injected by JavaScript -->
-                </div>
-                <div class="swiper-pagination"></div>
-            </div>
+</form>
 
-            <!-- Programme Cards Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="programme-cards">
-                <!-- Populated dynamically -->
-            </div>
-        </div>
+</div>
 
-        <!-- ==================== ALL APPLICATIONS TAB ==================== -->
-        <div id="all-applications" class="tab-content hidden">
-            <div class="flex items-center justify-between mb-6">
-                <div>
-                    <h3 class="text-3xl font-extrabold text-slate-900">All Applications</h3>
-                    <p class="text-slate-600">Review and manage submitted student applications.</p>
-                </div>
-                <div class="flex gap-x-3">
-                    <button onclick="exportToCSV()" 
-                            class="px-5 py-2.5 text-sm font-semibold flex items-center gap-x-2 border border-slate-300 hover:bg-white transition-colors rounded-2xl bg-white">
-                        <i class="fa-solid fa-download"></i>
-                        <span>Export CSV</span>
-                    </button>
-                    <button onclick="clearAllApplications()" 
-                            class="px-5 py-2.5 text-sm font-semibold flex items-center gap-x-2 text-red-600 hover:bg-red-50 transition-colors rounded-2xl">
-                        <i class="fa-solid fa-trash"></i>
-                        <span>Clear All</span>
-                    </button>
-                </div>
-            </div>
+</div>
 
-            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-                <div class="overflow-x-auto">
-                    <table class="w-full data-table text-sm">
-                        <thead>
-                            <tr>
-                                <th class="px-6 py-4 text-left">Reference</th>
-                                <th class="px-6 py-4 text-left">Applicant</th>
-                                <th class="px-6 py-4 text-left">Programme</th>
-                                <th class="px-6 py-4 text-center">Points</th>
-                                <th class="px-6 py-4 text-center">Status</th>
-                                <th class="px-6 py-4 text-center">Date</th>
-                                <th class="px-6 py-4 text-center w-16">View</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applications-table-body" class="divide-y divide-slate-100">
-                            <!-- Populated by JS -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            
-            <div id="no-applications" class="hidden text-center py-16 bg-white mt-4 rounded-3xl border">
-                <i class="fa-solid fa-inbox text-6xl text-slate-200 mb-4"></i>
-                <p class="font-semibold text-slate-500">No applications have been submitted yet.</p>
-            </div>
-        </div>
-    </div>
+<!-- MAIN APP -->
+<div id="app-container" class="hidden">
 
-    <!-- Application Detail Modal -->
-    <div id="detail-modal" onclick="if (event.target.id === 'detail-modal') hideModal()" 
-         class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-6">
-        <div onclick="event.stopImmediatePropagation()" 
-             class="modal bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col">
-            
-            <div class="px-8 py-5 border-b flex items-center justify-between bg-slate-50">
-                <div>
-                    <div id="modal-ref" class="font-mono text-xs tracking-widest text-slate-500"></div>
-                    <div id="modal-name" class="text-2xl font-extrabold text-slate-900"></div>
-                </div>
-                <div id="modal-status-badge"></div>
-            </div>
-            
-            <div class="p-8 overflow-auto flex-1" id="modal-content">
-                <!-- Dynamic content -->
-            </div>
-            
-            <div class="px-8 py-5 border-t bg-slate-50 flex justify-end gap-x-3">
-                <button onclick="hideModal()" 
-                        class="px-6 py-2.5 text-sm font-semibold rounded-2xl border border-slate-300 hover:bg-white transition-colors">
-                    Close
-                </button>
-                <button onclick="deleteCurrentApplication()" 
-                        class="px-6 py-2.5 text-sm font-semibold rounded-2xl bg-red-600 text-white hover:bg-red-700 transition-colors flex items-center gap-x-2">
-                    <i class="fa-solid fa-trash"></i>
-                    <span>Delete</span>
-                </button>
-            </div>
-        </div>
-    </div>
+<div class="flex min-h-screen">
 
-    <!-- Swiper JS -->
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
-    <!-- Main Application Script -->
-    <script src="app.js"></script>
-    
-    <script>
-        // Simple login guard
-        (function checkLogin() {
-            const user = localStorage.getItem('currentUser');
-            if (!user) {
-                // window.location.href = 'login.html';
-            }
-        })();
+<!-- SIDEBAR -->
+<aside class="w-72 bg-slate-900 text-white">
 
-        // ========== DARK MODE ==========
-        function toggleDarkMode() {
-            const html = document.documentElement;
-            html.classList.toggle('dark');
-            
-            const isDark = html.classList.contains('dark');
-            localStorage.setItem('darkMode', isDark);
-            
-            updateDarkModeIcon(isDark);
-        }
+<div class="p-6 border-b border-slate-700">
 
-        function updateDarkModeIcon(isDark) {
-            const icon = document.getElementById('dark-mode-icon');
-            if (!icon) return;
-            
-            if (isDark) {
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-            } else {
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-            }
-        }
+<h2 class="text-2xl font-bold">
+FCTVE
+</h2>
 
-        // Initialize dark mode from localStorage
-        (function initDarkMode() {
-            const savedMode = localStorage.getItem('darkMode');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            if (savedMode === 'true' || (savedMode === null && prefersDark)) {
-                document.documentElement.classList.add('dark');
-                setTimeout(() => updateDarkModeIcon(true), 100);
-            } else {
-                setTimeout(() => updateDarkModeIcon(false), 100);
-            }
-        })();
-    </script>
+<p class="text-sm text-slate-400">
+Admissions System
+</p>
+
+</div>
+
+<nav class="p-4 space-y-2">
+
+<button class="sidebar-link" onclick="showSection('dashboard')">
+<i class="fa fa-chart-line"></i>
+Dashboard
+</button>
+
+<button class="sidebar-link" onclick="showSection('application-form')">
+<i class="fa fa-user-plus"></i>
+New Application
+</button>
+
+<button class="sidebar-link" onclick="showSection('applications')">
+<i class="fa fa-list"></i>
+Applications
+</button>
+
+<button class="sidebar-link" onclick="showSection('programmes')">
+<i class="fa fa-graduation-cap"></i>
+Programmes
+</button>
+
+<button class="sidebar-link" onclick="showSection('analytics')">
+<i class="fa fa-chart-pie"></i>
+Admission Intelligence
+</button>
+
+<button class="sidebar-link" onclick="showSection('reports')">
+<i class="fa fa-file"></i>
+Reports
+</button>
+
+<button onclick="logout()" class="sidebar-link text-red-400">
+<i class="fa fa-sign-out-alt"></i>
+Logout
+</button>
+
+</nav>
+
+</aside>
+
+<!-- CONTENT -->
+<main class="flex-1">
+
+<!-- TOP BAR -->
+<header class="bg-white border-b px-8 py-4">
+
+<div class="flex justify-between items-center">
+
+<div>
+
+<h1 class="text-2xl font-bold text-slate-800">
+Admissions Dashboard
+</h1>
+
+<p class="text-slate-500">
+Academic Year 2026 / 2027
+</p>
+
+</div>
+
+<div class="flex items-center gap-3">
+
+<div class="text-right">
+<div id="logged-user" class="font-semibold">
+Admin
+</div>
+<div class="text-xs text-slate-500">
+Admissions Officer
+</div>
+</div>
+
+</div>
+
+</div>
+
+</header>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page-section p-8">
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+<div class="card">
+<h3>Total Applications</h3>
+<p id="totalApplications">0</p>
+</div>
+
+<div class="card">
+<h3>Qualified</h3>
+<p id="qualifiedApplicants">0</p>
+</div>
+
+<div class="card">
+<h3>Rejected</h3>
+<p id="rejectedApplicants">0</p>
+</div>
+
+<div class="card">
+<h3>Pending Review</h3>
+<p id="pendingApplicants">0</p>
+</div>
+
+</div>
+
+<div class="grid md:grid-cols-2 gap-6 mt-8">
+
+<div class="chart-card">
+<h3>Applications by Programme</h3>
+<canvas id="programmeChart"></canvas>
+</div>
+
+<div class="chart-card">
+<h3>Status Distribution</h3>
+<canvas id="statusChart"></canvas>
+</div>
+
+</div>
+
+</section>
+
+<!-- NEW APPLICATION -->
+<section id="application-form" class="page-section hidden p-8">
+
+<div class="bg-white rounded-3xl p-8 shadow">
+
+<h2 class="text-2xl font-bold mb-6">
+New Application
+</h2>
+
+<form id="admissionForm">
+
+<div class="grid md:grid-cols-2 gap-6">
+
+<input
+type="text"
+placeholder="Surname"
+id="surname"
+class="form-input">
+
+<input
+type="text"
+placeholder="First Name"
+id="firstname"
+class="form-input">
+
+<input
+type="text"
+placeholder="ID Number"
+id="identity"
+class="form-input">
+
+<select id="gender" class="form-input">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+</div>
+
+<h3 class="mt-8 font-bold text-lg">
+Programme Choices
+</h3>
+
+<div class="grid md:grid-cols-3 gap-4 mt-4">
+
+<select id="choice1" class="form-input"></select>
+
+<select id="choice2" class="form-input"></select>
+
+<select id="choice3" class="form-input"></select>
+
+</div>
+
+<div class="mt-8">
+
+<h3 class="font-bold text-lg">
+Best 6 Points
+</h3>
+
+<div
+id="bestSixDisplay"
+class="text-5xl font-bold text-blue-800">
+
+0
+
+</div>
+
+</div>
+
+<button
+type="submit"
+class="mt-8 bg-blue-800 text-white px-8 py-3 rounded-xl">
+
+Submit Application
+
+</button>
+
+</form>
+
+</div>
+
+</section>
+
+<!-- APPLICATIONS -->
+<section id="applications" class="page-section hidden p-8">
+
+<div class="bg-white rounded-3xl shadow p-6">
+
+<div class="flex justify-between mb-6">
+
+<h2 class="text-2xl font-bold">
+Applications
+</h2>
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search applicants..."
+class="border rounded-xl px-4 py-2">
+
+</div>
+
+<table class="w-full">
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Programme</th>
+<th>Points</th>
+<th>Status</th>
+<th>Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody id="applicationsTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- PROGRAMMES -->
+<section id="programmes" class="page-section hidden p-8">
+
+<div class="bg-white rounded-3xl shadow p-6">
+
+<h2 class="text-2xl font-bold mb-6">
+Programme Capacity Management
+</h2>
+
+<div
+id="programmeCapacityContainer"
+class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ANALYTICS -->
+<section id="analytics" class="page-section hidden p-8">
+
+<div class="grid md:grid-cols-4 gap-6">
+
+<div class="card">
+<h3>Average Points</h3>
+<p id="avgPoints">0</p>
+</div>
+
+<div class="card">
+<h3>Acceptance Rate</h3>
+<p id="acceptanceRate">0%</p>
+</div>
+
+<div class="card">
+<h3>Most Popular Programme</h3>
+<p id="popularProgramme">-</p>
+</div>
+
+<div class="card">
+<h3>Total Programmes</h3>
+<p id="programmeCount">0</p>
+</div>
+
+</div>
+
+<div class="grid md:grid-cols-2 gap-6 mt-8">
+
+<div class="chart-card">
+<canvas id="genderChart"></canvas>
+</div>
+
+<div class="chart-card">
+<canvas id="districtChart"></canvas>
+</div>
+
+</div>
+
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="page-section hidden p-8">
+
+<div class="bg-white rounded-3xl p-6 shadow">
+
+<h2 class="text-2xl font-bold mb-6">
+Reports & Exports
+</h2>
+
+<div class="grid md:grid-cols-3 gap-4">
+
+<button
+onclick="exportCSV()"
+class="bg-green-600 text-white p-4 rounded-xl">
+
+Export CSV
+
+</button>
+
+<button
+onclick="exportPDF()"
+class="bg-red-600 text-white p-4 rounded-xl">
+
+Export PDF
+
+</button>
+
+<button
+onclick="window.print()"
+class="bg-blue-800 text-white p-4 rounded-xl">
+
+Print Report
+
+</button>
+
+</div>
+
+</div>
+
+</section>
+
+</main>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
 </body>
 </html>
